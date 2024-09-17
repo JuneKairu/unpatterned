@@ -14,7 +14,7 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-md p-8 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg">
+      <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold mb-6 text-center">LOGIN</h2>
         <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
