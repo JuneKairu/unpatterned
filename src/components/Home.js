@@ -3,7 +3,7 @@ import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
 
 const categories = {
   electronics: [
-    { name: 'TV', price: 50000 }, // Example price in PHP
+    { name: 'TV', price: 50000 },
     { name: 'Laptop', price: 100000 },
     { name: 'Headphones', price: 5000 },
   ],
@@ -48,7 +48,7 @@ function Home() {
 
   const handleCheckout = () => {
     alert(`Total amount: ${formatCurrency(calculateTotal())}`);
-    setCart([]); // Clear cart after checkout
+    setCart([]);
   };
 
   const handleCategoryChange = (e) => {
@@ -83,7 +83,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Category Dropdown */}
           <div className="mb-6">
             <label htmlFor="category" className="block text-sm font-medium text-gray-700">Select Category</label>
             <select
