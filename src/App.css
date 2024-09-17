@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.app-container {
+    background-image: url('./assets/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
