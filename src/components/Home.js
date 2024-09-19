@@ -5,22 +5,34 @@ import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
 const categories = {
   uniforms: [
     { name: 'SBIT Departmental Shirt', price: 500 },
-    { name: 'PE Uniform (College) - Shirt', price: 300 },
-    { name: 'SHTM Departmental Shirt (Medium)', price: 550 },
-    { name: 'SSLATE Departmental Shirt', price: 750 },
-    { name: 'PE Uniform (College) - Pants', price: 300 },
-    { name: 'SARFAID Departmental Shirt', price: 500 },
     { name: 'SHTM Departmental Shirt', price: 550 },
+    { name: 'SSLATE Departmental Shirt', price: 750 },
+    { name: 'SARFAID Departmental Shirt', price: 500 },
+    { name: 'PE Uniform (College)', price: 600 },
   ],
   schoolsupplies: [
     { name: 'Yellow Pad', price: 75 },
     { name: 'Intermediate Pad', price: 75 },
-    { name: 'Eggs', price: 150 },
+    { name: 'Eraser', price: 20 },
+    { name: 'Sharpener', price: 10 },
+    {
+      name: 'Bond Paper',
+      options: [
+        { name: 'A4', price: 2 },
+        { name: 'Long', price: 2 },
+        { name: 'Short', price: 1 }
+      ]
+    }
+  ],
+  lccbmerchandise: [
+    { name: 'LCCB Jacket', price: 500 },
+    { name: 'LCCB Baseball Hat', price: 250 },
+    { name: 'LCCB Shirt (White)', price: 750 },
   ],
   others: [
     { name: 'Sanitary Pads', price: 10 },
-    { name: 'Jeans', price: 2500 },
-    { name: 'Jacket', price: 5000 },
+    { name: 'Thumb Stacks (Pack)', price: 50 },
+    { name: 'Paper Clips (Pack)', price: 20 },
   ],
 };
 
@@ -39,19 +51,25 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cashGiven, setCashGiven] = useState(0);
 
-  const addToCart = (item) => {
-    const itemInCart = cart.find((cartItem) => cartItem.name === item.name);
+  const addToCart = (item, optionName) => {
+    const itemPrice = item.options
+      ? item.options.find(option => option.name === optionName).price
+      : item.price;
+
+    const itemInCart = cart.find(cartItem => cartItem.name === item.name && cartItem.option === optionName);
     if (itemInCart) {
       setCart(cart.map(cartItem =>
-        cartItem.name === item.name ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        cartItem.name === item.name && cartItem.option === optionName
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
       ));
     } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
+      setCart([...cart, { ...item, price: itemPrice, option: optionName, quantity: 1 }]);
     }
   };
 
-  const removeFromCart = (item) => {
-    setCart(cart.filter(cartItem => cartItem.name !== item.name));
+  const removeFromCart = (item, optionName) => {
+    setCart(cart.filter(cartItem => !(cartItem.name === item.name && cartItem.option === optionName)));
   };
 
   const calculateTotal = () => {
@@ -139,15 +157,32 @@ function Home() {
               <p>No items available for the selected categories.</p>
             ) : (
               filteredItems.map(item => (
-                <div key={item.name} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
-                  <span>{item.name} - {formatCurrency(item.price)}</span>
-                  <button
-                    onClick={() => addToCart(item)}
-                    className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
+                item.options ? (
+                  <div key={item.name} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md">
+                    <h3 className="font-medium">{item.name}</h3>
+                    {item.options.map(option => (
+                      <div key={option.name} className="flex justify-between items-center mb-2">
+                        <span>{option.name} - {formatCurrency(option.price)}</span>
+                        <button
+                          onClick={() => addToCart(item, option.name)}
+                          className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div key={item.name} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
+                    <span>{item.name} - {formatCurrency(item.price)}</span>
+                    <button
+                      onClick={() => addToCart(item)}
+                      className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                )
               ))
             )}
           </div>
@@ -161,12 +196,12 @@ function Home() {
             <div>
               <ul>
                 {cart.map((item) => (
-                  <li key={item.name} className="border-b py-2 flex justify-between items-center">
+                  <li key={`${item.name}-${item.option}`} className="border-b py-2 flex justify-between items-center">
                     <span>
-                      {item.name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}
+                      {item.name} ({item.option ? item.option : 'No option'}) (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}
                     </span>
                     <button
-                      onClick={() => removeFromCart(item)}
+                      onClick={() => removeFromCart(item, item.option)}
                       className="ml-4 bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700"
                     >
                       Remove
@@ -203,8 +238,8 @@ function Home() {
               <h3 className="text-lg font-medium">Items</h3>
               <ul>
                 {cart.map(item => (
-                  <li key={item.name} className="border-b py-2 flex justify-between items-center">
-                    <span>{item.name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
+                  <li key={`${item.name}-${item.option}`} className="border-b py-2 flex justify-between items-center">
+                    <span>{item.name} ({item.option ? item.option : 'No option'}) (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
                   </li>
                 ))}
               </ul>
