@@ -2,17 +2,24 @@ import React, { useState } from 'react';
 import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
 
 const categories = {
-  electronics: [
-    { name: 'TV', price: 50000 },
-    { name: 'Laptop', price: 100000 },
-    { name: 'Headphones', price: 5000 },
+  uniforms: [
+    { name: 'SBIT Departmental Shirt', price: 500 },
+    { name: 'PE Uniform (College) - Shirt', price: 300 },
+    { name: 'SHTM Departmental Shirt (Medium)', price: 550 },
+    { name: 'SSLATE Departmental Shirt', price: 750 },
+    { name: 'PE Uniform (College) - Pants', price: 300 },
+    { name: 'SARFAID Departmental Shirt', price: 500 },
+    { name: 'SHTM Departmental Shirt', price: 550 },
+    { name: 'SHTM Departmental Shirt', price: 550 },
+    { name: 'SHTM Departmental Shirt', price: 550 },
+    { name: 'SHTM Departmental Shirt', price: 550 },
   ],
-  groceries: [
-    { name: 'Milk', price: 100 },
-    { name: 'Bread', price: 75 },
+  schoolsupplies: [
+    { name: 'Yellow Pad', price: 75 },
+    { name: 'Marker', price: 25 },
     { name: 'Eggs', price: 150 },
   ],
-  clothing: [
+  others: [
     { name: 'T-Shirt', price: 1000 },
     { name: 'Jeans', price: 2500 },
     { name: 'Jacket', price: 5000 },
@@ -71,7 +78,7 @@ function Home() {
                 title="Notifications"
               >
                 <BellIcon className="h-6 w-6" />
-                <span>Notify</span>
+                <span>Notifications</span>
               </button>
               <button
                 className="flex items-center space-x-2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
