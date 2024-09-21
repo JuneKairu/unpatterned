@@ -1,40 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
-
-const categories = {
-  uniforms: [
-    { name: 'SBIT Departmental Shirt', price: 500 },
-    { name: 'SHTM Departmental Shirt', price: 550 },
-    { name: 'SSLATE Departmental Shirt', price: 750 },
-    { name: 'SARFAID Departmental Shirt', price: 500 },
-    { name: 'PE Uniform (College)', price: 600 },
-  ],
-  schoolsupplies: [
-    { name: 'Yellow Pad', price: 75 },
-    { name: 'Intermediate Pad', price: 75 },
-    { name: 'Eraser', price: 20 },
-    { name: 'Sharpener', price: 10 },
-    {
-      name: 'Bond Paper',
-      options: [
-        { name: 'A4', price: 2 },
-        { name: 'Long', price: 2 },
-        { name: 'Short', price: 1 }
-      ]
-    }
-  ],
-  lccbmerchandise: [
-    { name: 'LCCB Jacket', price: 500 },
-    { name: 'LCCB Baseball Hat', price: 250 },
-    { name: 'LCCB Shirt (White)', price: 750 },
-  ],
-  others: [
-    { name: 'Sanitary Pads', price: 10 },
-    { name: 'Thumb Stacks (Pack)', price: 50 },
-    { name: 'Paper Clips (Pack)', price: 20 },
-  ],
-};
+import { categories } from './Items/items';
 
 const formatCurrency = (amount) => {
   return `₱${amount.toLocaleString()}`;
@@ -252,41 +219,9 @@ function Home() {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400"
+                className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400"
               >
                 Close
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    const response = await fetch('http://localhost:4000/print', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        cart,
-                        total: totalAmount,
-                        cashGiven,
-                        change,
-                      }),
-                    });
-
-                    if (response.ok) {
-                      console.log('Receipt printed successfully!');
-                      setIsModalOpen(false);
-                      setCart([]);
-                      setCashGiven(0);
-                    } else {
-                      console.error('Failed to print receipt.');
-                    }
-                  } catch (error) {
-                    console.error('Error:', error);
-                  }
-                }}
-                className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-              >
-                Print Receipt
               </button>
             </div>
           </div>
