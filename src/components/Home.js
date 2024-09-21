@@ -179,7 +179,7 @@ function Home() {
               <div className="mt-4 text-right">
                 <h3 className="text-xl font-semibold">Total: {formatCurrency(totalAmount)}</h3>
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Cash Given"
                   className="mt-2 p-2 border border-gray-300 rounded"
                   value={cashGiven}
