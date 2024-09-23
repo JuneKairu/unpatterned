@@ -11,8 +11,7 @@ export const categories = {
       { name: 'Intermediate Pad', price: 75 },
       { name: 'Eraser', price: 20 },
       { name: 'Sharpener', price: 10 },
-      {
-        name: 'Bond Paper',
+      { name: 'Bond Paper',
         options: [
           { name: 'A4', price: 2 },
           { name: 'Long', price: 2 },
@@ -21,9 +20,19 @@ export const categories = {
       }
     ],
     lccbmerchandise: [
-      { name: 'LCCB Jacket', price: 500 },
-      { name: 'LCCB Baseball Hat', price: 250 },
-      { name: 'LCCB Shirt (White)', price: 750 },
+      { name: 'Jacket',
+        options: [
+          { name: 'White', price: 750},
+          { name: 'Blue', price: 750}
+        ]
+      },
+      { name: 'Baseball Cap', price: 250 },
+      { name: 'T-Shirt',
+        options: [
+          { name: 'White', price: 250},
+          { name: 'Blue', price: 250}
+        ]
+      },
     ],
     others: [
       { name: 'Sanitary Pads', price: 10 },
