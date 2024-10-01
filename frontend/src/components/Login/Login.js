@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-//test
+import axios from 'axios';
+
+import { useNavigate } from 'react-router-dom'; 
+
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login:', { email, password });
-    navigate('/home');
-  };
+  function handleSubmit(event) {
+    event.preventDefault();
+    axios.post('http://localhost:8081/login', { email, password })
+      .then(res => {
+        if (res.data.length > 0) {
+          navigate('/Home');
+        } else {
+          alert("Invalid email or password.");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        alert("Login Failed.");
+      });
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
