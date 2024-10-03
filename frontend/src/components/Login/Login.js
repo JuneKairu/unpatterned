@@ -11,17 +11,22 @@ function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    
     axios.post('http://localhost:8081/login', { email, password })
       .then(res => {
         if (res.data.length > 0) {
-          navigate('/Home');
+          if (email === 'admin@gmail.com' && password === '123') {
+            navigate('/admin');
+          } else {
+            navigate('/Home');
+          }
         } else {
           alert("Invalid email or password.");
         }
       })
       .catch(err => {
         console.log(err);
-        alert("Login Failed.");
+        alert("Invalid email or password.");
       });
   }
 

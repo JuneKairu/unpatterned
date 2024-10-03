@@ -4,6 +4,8 @@ import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import Home from './components/Home';
 import backgroundImage from './assets/images/background2.jpg';
+import Admin_dashboard from './components/Admin_dashboard/Admin_dashboard';
+
 
 function App() {
   return (
@@ -16,6 +18,9 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/admin" element={<Admin_dashboard />} />
+
+            
           </Routes>
         </div>
     </Router>
