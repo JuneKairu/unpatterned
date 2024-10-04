@@ -15,6 +15,7 @@ const categoryOptions = Object.keys(categories).map(category => ({
 function Home() {
   const [cart, setCart] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); // Added state for search
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cashGiven, setCashGiven] = useState(0);
 
@@ -72,11 +73,12 @@ function Home() {
     setSelectedCategories(selectedOptions ? selectedOptions.map(option => option.value) : []);
   };
 
-  const filteredItems = selectedCategories.length === 0
-    ? Object.values(categories).flat()
-    : Object.entries(categories).flatMap(([category, items]) =>
-        selectedCategories.includes(category) ? items : []
-      );
+  // Filter items based on selected categories and search query
+  const filteredItems = Object.entries(categories).flatMap(([category, items]) => {
+    return selectedCategories.length === 0 || selectedCategories.includes(category)
+      ? items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      : [];
+  });
 
   const totalAmount = calculateTotal();
   const change = cashGiven - totalAmount;
@@ -119,9 +121,20 @@ function Home() {
             </div>
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-6">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              placeholder="Search items..."
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
             {filteredItems.length === 0 ? (
-              <p>No items available for the selected categories.</p>
+              <p>No items available for the selected categories or search term.</p>
             ) : (
               filteredItems.map(item => (
                 item.options ? (
@@ -210,16 +223,14 @@ function Home() {
                   </li>
                 ))}
               </ul>
+              <h3 className="text-lg font-semibold mt-4">Total: {formatCurrency(totalAmount)}</h3>
+              <h3 className="text-lg font-semibold">Cash Given: {formatCurrency(cashGiven)}</h3>
+              <h3 className="text-lg font-semibold">Change: {formatCurrency(change)}</h3>
             </div>
-            <div className="mb-4 text-right">
-              <h3 className="text-xl font-semibold">Total: {formatCurrency(totalAmount)}</h3>
-              <h3 className="text-xl font-semibold">Cash: {formatCurrency(cashGiven)}</h3>
-              <h3 className="text-xl font-semibold">Change: {formatCurrency(change)}</h3>
-            </div>
-            <div className="flex justify-end space-x-4">
+            <div className="text-right">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400"
+                className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
               >
                 Close
               </button>
