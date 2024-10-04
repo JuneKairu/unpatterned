@@ -1,6 +1,13 @@
 export const categories = {
     uniforms: [
-      { name: 'SBIT Departmental Shirt', price: 500 },
+      { name: 'SBIT Departmental Shirt',
+          options: [
+            { name: 'S', price: 500},
+            { name: 'M', price: 600},
+            { name: 'L', price: 750},
+            { name: 'XL', price: 750},
+            { name: 'XXL', price: 750}
+          ] },
       { name: 'SHTM Departmental Shirt', price: 550 },
       { name: 'SSLATE Departmental Shirt', price: 750 },
       { name: 'SARFAID Departmental Shirt', price: 500 },
