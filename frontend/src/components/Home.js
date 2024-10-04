@@ -15,7 +15,7 @@ const categoryOptions = Object.keys(categories).map(category => ({
 function Home() {
   const [cart, setCart] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // Added state for search
+  const [searchQuery, setSearchQuery] = useState(''); // search
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cashGiven, setCashGiven] = useState(0);
 
@@ -73,7 +73,7 @@ function Home() {
     setSelectedCategories(selectedOptions ? selectedOptions.map(option => option.value) : []);
   };
 
-  // Filter items based on selected categories and search query
+  // Filter items
   const filteredItems = Object.entries(categories).flatMap(([category, items]) => {
     return selectedCategories.length === 0 || selectedCategories.includes(category)
       ? items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
