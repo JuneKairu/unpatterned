@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
+import Navbar from '../Navbar/Navbar';
+import backgroundImage from '../../assets/images/background2.jpg';
 
 function Admin_dashboard() {
   const [products, setProducts] = useState([]);
@@ -8,7 +10,6 @@ function Admin_dashboard() {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [newProduct, setNewProduct] = useState({ category: '', name: '', price: '' });
 
-  
   useEffect(() => {
     if (selectedCategories.length > 0) {
       const category = selectedCategories[0].value; 
@@ -19,7 +20,6 @@ function Admin_dashboard() {
     }
   }, [selectedCategories]);
 
-  
   const handleAddProduct = () => {
     fetch('http://localhost:8081/addProduct', {
       method: 'POST',
@@ -32,38 +32,55 @@ function Admin_dashboard() {
       .then((data) => {
         alert('Product added successfully');
         setShowAddProductForm(false);
-        setNewProduct({ category: '', name: '', price: '' }); // reset form
+        setNewProduct({ category: '', name: '', price: '' });
       })
       .catch((err) => console.error(err));
   };
 
   return (
-    <div className="p-4">
-      <div className="min-h-screen mx-auto flex space-x-8">
-        <div className="flex-1 p-6 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg">
+    <div 
+      className="flex"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Navbar />
+      <div className="flex-1 p-4">
+        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">LCCB BOOKSTORE ADMIN DASHBOARD</h1>
+            <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
             <div className="flex space-x-4">
               <button
-                className="flex items-center space-x-2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
+                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
                 title="Notifications"
               >
-                <BellIcon className="h-6 w-6" />
-                <span>Notifications</span>
+                <BellIcon className="h-5 w-5" />
+                <span className="text-sm">Notifications</span>
               </button>
               <button
-                className="flex items-center space-x-2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
+                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
                 title="Inventory"
               >
-                <InboxIcon className="h-6 w-6" />
-                <span>Inventory</span>
+                <InboxIcon className="h-5 w-5" />
+                <span className="text-sm">Inventory</span>
               </button>
             </div>
           </div>
 
-          {/* select which product to display */}
+          {/* Add New Product button */}
+          <button
+            className="mb-6 bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 text-sm"
+            onClick={() => setShowAddProductForm(true)}
+          >
+            Add New Product
+          </button>
+
+          {/* Filter */}
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-700">Filter</h2>
+            <h2 className="text-base font-medium text-gray-700">Filter</h2>
             <div className="w-1/2">
               <Select
                 isMulti
@@ -80,35 +97,27 @@ function Admin_dashboard() {
             </div>
           </div>
 
-          {/* show products / missing all display if unselect */}
+          {/* Products Display */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
             {products.length === 0 ? (
-              <p>No items available for the selected categories.</p>
+              <p className="text-sm">No items available for the selected categories.</p>
             ) : (
               products.map((product) => (
-                <div key={product.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                  <h3 className="font-medium">{product.name}</h3>
-                  <p>{`₱${product.price}`}</p>
+                <div key={product.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+                  <h3 className="font-medium text-sm text-gray-800">{product.name}</h3>
+                  <p className="text-sm text-gray-600">{`₱${product.price}`}</p>
                 </div>
               ))
             )}
           </div>
 
-          
-          <button
-            className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded"
-            onClick={() => setShowAddProductForm(true)}
-          >
-            Add New Product
-          </button>
-
-         
+          {/* Add Product Form Modal */}
           {showAddProductForm && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-6 rounded shadow-lg">
-                <h3 className="text-lg font-medium mb-4">Add New Product</h3>
+                <h3 className="text-base font-medium mb-4">Add New Product</h3>
                 <select
-                  className="mb-4 p-2 border border-gray-300 rounded"
+                  className="mb-4 p-2 border border-gray-300 rounded text-sm"
                   value={newProduct.category}
                   onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
                 >
@@ -118,24 +127,24 @@ function Admin_dashboard() {
                   <option value="lccbmerchandise">LCCB Merchandise</option>
                 </select>
                 <input
-                  className="mb-4 p-2 border border-gray-300 rounded"
+                  className="mb-4 p-2 border border-gray-300 rounded text-sm"
                   type="text"
                   placeholder="Product Name"
                   value={newProduct.name}
                   onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                 />
                 <input
-                  className="mb-4 p-2 border border-gray-300 rounded"
+                  className="mb-4 p-2 border border-gray-300 rounded text-sm"
                   type="number"
                   placeholder="Product Price"
                   value={newProduct.price}
                   onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                 />
-                <button className="bg-indigo-600 text-white py-2 px-4 rounded" onClick={handleAddProduct}>
+                <button className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 text-sm" onClick={handleAddProduct}>
                   Add Product
                 </button>
                 <button
-                  className="ml-2 bg-indigo-600 text-white py-2 px-4 rounded"
+                  className="ml-2 bg-gray-500 text-white py-1.5 px-3 rounded hover:bg-gray-600 text-sm"
                   onClick={() => setShowAddProductForm(false)}
                 >
                   Cancel
@@ -143,11 +152,12 @@ function Admin_dashboard() {
               </div>
             </div>
           )}
-        </div>
 
-        <div className="w-80 bg-white/30 backdrop-blur-md p-4 border border-gray-200 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Sales As of Date</h2>
-          <p>No Record found.</p>
+          {/* Sales Summary inside Admin Dashboard */}
+          <div className="w-full bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm mt-4">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Sales As of Date</h2>
+            <p className="text-sm">No Record found.</p>
+          </div>
         </div>
       </div>
     </div>
