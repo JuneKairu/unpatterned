@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
+import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'; // Import Logout Icon
 import { categories } from './Items/items';
+// import backgroundImage from '../assets/images/background2.jpg';
+// import Navbar from '../Navbar/Navbar';
 
 const formatCurrency = (amount) => {
   return `₱${amount.toLocaleString()}`;
@@ -15,7 +17,7 @@ const categoryOptions = Object.keys(categories).map(category => ({
 function Home() {
   const [cart, setCart] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // search
+  const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cashGiven, setCashGiven] = useState(0);
 
@@ -69,11 +71,15 @@ function Home() {
     }
   };
 
+  const handleLogout = () => {
+    // Implement your logout logic here
+    console.log('Logout clicked');
+  };
+
   const handleCategoryChange = (selectedOptions) => {
     setSelectedCategories(selectedOptions ? selectedOptions.map(option => option.value) : []);
   };
 
-  // Filter items
   const filteredItems = Object.entries(categories).flatMap(([category, items]) => {
     return selectedCategories.length === 0 || selectedCategories.includes(category)
       ? items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -86,23 +92,31 @@ function Home() {
   return (
     <div className="p-4">
       <div className="min-h-screen mx-auto flex space-x-8">
-        <div className="flex-1 p-6 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg">
+        <div className="flex-1 p-6 bg-blue/80 border-gray-200 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">LCCB BOOKSTORE</h1>
             <div className="flex space-x-4">
               <button
-                className="flex items-center space-x-2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
+                className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]"
                 title="Notifications"
               >
                 <BellIcon className="h-6 w-6" />
                 <span>Notifications</span>
               </button>
               <button
-                className="flex items-center space-x-2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
+                className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]"
                 title="Inventory"
               >
                 <InboxIcon className="h-6 w-6" />
                 <span>Inventory</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                title="Logout"
+              >
+                <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+                <span>Logout</span>
               </button>
             </div>
           </div>
@@ -121,7 +135,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Search Bar */}
           <div className="mb-6">
             <input
               type="text"
@@ -217,24 +230,24 @@ function Home() {
             <div className="mb-4">
               <h3 className="text-lg font-medium">Items</h3>
               <ul>
-                {cart.map(item => (
-                  <li key={`${item.name}-${item.option}`} className="border-b py-2 flex justify-between items-center">
-                    <span>{item.name} ({item.option ? item.option : 'No option'}) (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
+                {cart.map((item, index) => (
+                  <li key={index}>
+                    {item.name} ({item.option ? item.option : 'No option'}) - {formatCurrency(item.price)} x {item.quantity}
                   </li>
                 ))}
               </ul>
-              <h3 className="text-lg font-semibold mt-4">Total: {formatCurrency(totalAmount)}</h3>
-              <h3 className="text-lg font-semibold">Cash Given: {formatCurrency(cashGiven)}</h3>
-              <h3 className="text-lg font-semibold">Change: {formatCurrency(change)}</h3>
             </div>
-            <div className="text-right">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
-              >
-                Close
-              </button>
+            <div className="mb-4">
+              <h3 className="text-lg font-medium">Total: {formatCurrency(totalAmount)}</h3>
+              <h3 className="text-lg font-medium">Cash Given: {formatCurrency(cashGiven)}</h3>
+              <h3 className="text-lg font-medium">Change: {formatCurrency(change)}</h3>
             </div>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

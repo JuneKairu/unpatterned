@@ -8,7 +8,7 @@ function Navbar() {
   const handleLogout = () => {
     // Implement your logout logic here (e.g., clearing tokens, redirecting)
     alert('Logged out successfully');
-    navigate('/login'); // Redirect to login page after logout
+    navigate('/'); // Redirect to login page after logout
   };
 
   return (
@@ -24,6 +24,21 @@ function Navbar() {
         >
           ADMIN DASHBOARD
         </button>
+        
+        <button
+          onClick={() => navigate('/home')}
+          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+        >
+          HOME
+        </button>
+
+        <button
+          onClick={() => navigate('/inventory')}
+          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+        >
+          INVENTORY
+        </button>
+        
         <button
           onClick={handleLogout}
           className="text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded transition duration-200"
