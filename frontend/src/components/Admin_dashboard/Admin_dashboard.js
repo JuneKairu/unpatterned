@@ -21,7 +21,7 @@ function Admin_dashboard() {
   }, [selectedCategories]);
 
   const handleAddProduct = () => {
-    fetch('http://localhost:8081/addProduct', {
+    fetch('http://localhost:8081/api/addProduct', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

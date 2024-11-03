@@ -8,10 +8,10 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:8081/login', { email, password })
+    axios.post('http://localhost:8081/api/Login', { email, password })
       .then(res => {
         if (res.data.length > 0) {
           if (email === 'admin@gmail.com' && password === '123') {

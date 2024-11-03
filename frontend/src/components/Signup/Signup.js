@@ -29,7 +29,7 @@ function Signup() {
     }
 
     // function to conect backend to send to sql 
-    axios.post('http://localhost:8081/Signup', {
+    axios.post('http://localhost:8081/api/Signup', {
       email: values.email,
       password: values.password
     })
