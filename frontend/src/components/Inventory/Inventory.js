@@ -51,7 +51,7 @@ function Inventory() {
       <div className="flex-1 p-4">
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
+            <h1 className="text-2xl font-bold text-gray-800">INVENTORY</h1>
             <div className="flex space-x-4">
               <button
                 className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
