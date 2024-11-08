@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'; // Import Logout Icon
+import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { categories } from './Items/items';
-// import backgroundImage from '../assets/images/background2.jpg';
-// import Navbar from '../Navbar/Navbar';
 
 const formatCurrency = (amount) => {
   return `₱${amount.toLocaleString()}`;
@@ -72,7 +70,6 @@ function Home() {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
     console.log('Logout clicked');
   };
 
@@ -90,7 +87,7 @@ function Home() {
   const change = cashGiven - totalAmount;
 
   return (
-    <div className="p-4">
+    <div className="p-4 font-sans">
       <div className="min-h-screen mx-auto flex space-x-8">
         <div className="flex-1 p-6 bg-blue/80 border-gray-200 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
