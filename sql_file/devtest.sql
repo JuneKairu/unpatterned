@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2024 at 07:19 PM
+-- Generation Time: Nov 09, 2024 at 05:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,44 +24,42 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lccbmerchandise`
+-- Table structure for table `tbl_productcategory`
 --
 
-CREATE TABLE `lccbmerchandise` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+CREATE TABLE `tbl_productcategory` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `lccbmerchandise`
+-- Dumping data for table `tbl_productcategory`
 --
 
-INSERT INTO `lccbmerchandise` (`id`, `name`, `price`) VALUES
-(1, 'Jacket', 750.00),
-(2, 'Baseball Cap', 250.00),
-(3, 'T-Shirt', 250.00);
+INSERT INTO `tbl_productcategory` (`category_id`, `category_name`, `created_at`) VALUES
+(1, 'dwa', '2024-11-09 16:21:02');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `schoolsupplies`
+-- Table structure for table `tbl_products`
 --
 
-CREATE TABLE `schoolsupplies` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+CREATE TABLE `tbl_products` (
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `product_name` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `schoolsupplies`
+-- Dumping data for table `tbl_products`
 --
 
-INSERT INTO `schoolsupplies` (`id`, `name`, `price`) VALUES
-(1, 'Yellow Pad', 75.00),
-(2, 'Intermediate Pad', 75.00),
-(3, 'Eraser', 20.00);
+INSERT INTO `tbl_products` (`product_id`, `category_id`, `product_name`, `price`, `created_at`) VALUES
+(1, 1, 'yutas', 100.00, '2024-11-09 16:24:38');
 
 -- --------------------------------------------------------
 
@@ -83,43 +81,22 @@ INSERT INTO `tb_logins` (`id`, `email`, `password`) VALUES
 (7, 'admin@gmail.com', '123'),
 (8, '09xghagox09@gmail.com', '123');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `uniforms`
---
-
-CREATE TABLE `uniforms` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `uniforms`
---
-
-INSERT INTO `uniforms` (`id`, `name`, `price`) VALUES
-(1, 'SBIT Departmental Shirt', 500.00),
-(2, 'SHTM Departmental Shirt', 550.00),
-(3, 'SSLATE Departmental Shirt', 750.00),
-(4, 'tae', 1.00);
-
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `lccbmerchandise`
+-- Indexes for table `tbl_productcategory`
 --
-ALTER TABLE `lccbmerchandise`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `tbl_productcategory`
+  ADD PRIMARY KEY (`category_id`);
 
 --
--- Indexes for table `schoolsupplies`
+-- Indexes for table `tbl_products`
 --
-ALTER TABLE `schoolsupplies`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `tbl_products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `tb_logins`
@@ -128,26 +105,20 @@ ALTER TABLE `tb_logins`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `uniforms`
---
-ALTER TABLE `uniforms`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `lccbmerchandise`
+-- AUTO_INCREMENT for table `tbl_productcategory`
 --
-ALTER TABLE `lccbmerchandise`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `tbl_productcategory`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `schoolsupplies`
+-- AUTO_INCREMENT for table `tbl_products`
 --
-ALTER TABLE `schoolsupplies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `tbl_products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tb_logins`
@@ -156,10 +127,14 @@ ALTER TABLE `tb_logins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `uniforms`
+-- Constraints for dumped tables
 --
-ALTER TABLE `uniforms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for table `tbl_products`
+--
+ALTER TABLE `tbl_products`
+  ADD CONSTRAINT `tbl_products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_productcategory` (`category_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
