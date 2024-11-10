@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { categories } from './Items/items';
 
@@ -68,9 +69,10 @@ function Home() {
       console.error('Error:', error);
     }
   };
-
+  const navigate = useNavigate();
   const handleLogout = () => {
-    console.log('Logout clicked');
+    alert('Logged out successfully');
+    navigate('/'); // Redirect to login page after logout
   };
 
   const handleCategoryChange = (selectedOptions) => {
