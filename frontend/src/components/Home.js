@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'; // Import Logout Icon
+import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { categories } from './Items/items';
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/images/background2.jpg';
@@ -73,6 +73,7 @@ function Home() {
   };
   const navigate = useNavigate();
   const handleLogout = () => {
+    console.log('Logout clicked');
     // Implement your logout logic here (e.g., clearing tokens, redirecting)
     alert('Logged out successfully');
     navigate('/'); // Redirect to login page after logout
@@ -92,7 +93,7 @@ function Home() {
   const change = cashGiven - totalAmount;
 
   return (
-    <div className="p-4">
+    <div className="p-4 font-sans">
       <div className="min-h-screen mx-auto flex space-x-8">
         <div className="flex-1 p-6 bg-blue/80 border-gray-200 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
