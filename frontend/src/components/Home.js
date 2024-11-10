@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { categories } from './Items/items';
-import { useNavigate } from 'react-router-dom';
-// import backgroundImage from '../assets/images/background2.jpg';
-// import Navbar from '../Navbar/Navbar';
 
 const formatCurrency = (amount) => {
   return `₱${amount.toLocaleString()}`;
@@ -71,12 +68,9 @@ function Home() {
       console.error('Error:', error);
     }
   };
-  const navigate = useNavigate();
+
   const handleLogout = () => {
     console.log('Logout clicked');
-    // Implement your logout logic here (e.g., clearing tokens, redirecting)
-    alert('Logged out successfully');
-    navigate('/'); // Redirect to login page after logout
   };
 
   const handleCategoryChange = (selectedOptions) => {
