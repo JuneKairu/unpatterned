@@ -137,17 +137,16 @@ function Delivery() {
           </div>
 
           {/* Sales Section */}
-          <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm mt-4">
           <div className="mb-6 flex space-x-4">
             <button 
               className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
               onClick={() => setShowAddProductForm(true)}
               disabled={loading}
             >
-              Add New Product
+              Add Delivery Schedule
             </button>
-            
           </div>
+          <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm mt-4">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Delivery Schedules</h2>
             <p className="text-sm text-gray-500">No Record found.</p>
           </div>
@@ -157,7 +156,7 @@ function Delivery() {
       {showAddProductForm && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h3 className="text-lg font-medium mb-4">Add New Product</h3>
+                <h3 className="text-lg font-medium mb-4">Add New Delivery</h3>
                 <form onSubmit={handleAddProduct}>
                   <div className="space-y-4">
                     <div>
