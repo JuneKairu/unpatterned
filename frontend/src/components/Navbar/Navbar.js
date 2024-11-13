@@ -38,6 +38,13 @@ function Navbar() {
         >
           INVENTORY
         </button>
+
+        <button
+          onClick={() => navigate('/delivery')}
+          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+        >
+          DELIVERY
+        </button>
         
         <button
           onClick={handleLogout}

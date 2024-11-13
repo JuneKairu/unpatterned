@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Inventory from './components/Inventory/Inventory';
 // import backgroundImage from './assets/images/background2.jpg';
 import Dashboard from './components/Admin_dashboard/Admin_dashboard';
+import Delivery from './components/Delivery/Delivery';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/delivery" element={<Delivery />} />
           </Routes>
         {/* </div> */}
       {/* </div> */}
