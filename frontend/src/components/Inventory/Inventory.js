@@ -252,7 +252,7 @@ const handleUpdateProduct = async () => {
             </div>
           )}
 
-          {/* DIsplay by fillter  */}
+          {/* Display by filter  */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
             {loading ? (
               <div className="col-span-full text-center py-4">Loading...</div>
@@ -270,102 +270,101 @@ const handleUpdateProduct = async () => {
                   {/*button to update the product list*/}
                   <button
                    onClick={() => openUpdateModal(product)}
-                   className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
->
+                   className="bg-indigo-500 text-white py-1.5 px-3 mt-2 rounded hover:bg-indigo-600 transition-colors text-sm"
+                  >
                   Update Items
-                    </button>
+                  </button>
                   {/*button to delete the product list*/}
                   <button
                   onClick={() => handleDeleteProduct(product.product_id)}
-                  className="bg-red-500 text-white py-1.5 px-3 rounded hover:bg-red-900 transition-colors text-sm"
->
+                  className="bg-red-500 text-white py-1.5 px-3 mt-3 rounded hover:bg-red-900 transition-colors text-sm"
+                  >
                   Delete Items
-                   </button>
+                  </button>
 
-{/*modal for update */}
-{showUpdateModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-      <h3 className="text-lg font-medium mb-4">Update Product</h3>
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Product Name
-          </label>
-          <input
-            name="product_name"
-            value={productToUpdate.product_name}
-            onChange={handleUpdateChange}
-            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-            type="text"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Price
-          </label>
-          <input
-            name="price"
-            value={productToUpdate.price}
-            onChange={handleUpdateChange}
-            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-            type="number"
-            step="0.01"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Quantity
-          </label>
-          <input
-            name="quantity"
-            value={productToUpdate.quantity}
-            onChange={handleUpdateChange}
-            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-            type="number"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Category
-          </label>
-          <select
-            name="category_id"
-            value={productToUpdate.category_id}
-            onChange={handleUpdateChange}
-            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select Category</option>
-            {categories.map((category) => (
+            {/*modal for update */}
+              {showUpdateModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                  <h3 className="text-lg font-medium mb-4">Update Product</h3>
+                <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Product Name
+                </label>
+              <input
+                name="product_name"
+                value={productToUpdate.product_name}
+                onChange={handleUpdateChange}
+                className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                type="text"
+              />
+              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price
+              </label>
+            <input
+              name="price"
+              value={productToUpdate.price}
+              onChange={handleUpdateChange}
+              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+              type="number"
+              step="0.01"
+            />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quantity
+              </label>
+            <input
+              name="quantity"
+              value={productToUpdate.quantity}
+              onChange={handleUpdateChange}
+              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+              type="number"
+            />
+            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
+            <select
+              name="category_id"
+              value={productToUpdate.category_id}
+              onChange={handleUpdateChange}
+              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="">Select Category</option>
+                {categories.map((category) => (
               <option key={category.category_id} value={category.category_id}>
                 {category.category_name}
               </option>
             ))}
-          </select>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div className="mt-6 flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={() => setShowUpdateModal(false)}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleUpdateProduct}
-          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
-        >
-          Save Changes
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-                  
-                </div>
-              ))
+        <div className="mt-6 flex justify-end space-x-3">
+          <button
+            type="button"
+            onClick={() => setShowUpdateModal(false)}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleUpdateProduct}
+            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+          >
+            Save Changes
+          </button>
+          </div>
+          </div>
+          </div>
+          )}                  
+          </div>
+            ))
             )}
           </div>
 
