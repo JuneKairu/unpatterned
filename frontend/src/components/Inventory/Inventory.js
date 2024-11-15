@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 function Inventory() {
-  // State management
+  // State management and unstate
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);

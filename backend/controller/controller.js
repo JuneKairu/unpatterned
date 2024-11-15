@@ -139,43 +139,48 @@ exports.getAllCategories = (req, res) => {
   
 
 
-  exports.updateProduct = async (req, res) => {
-    try {
-      const { product_id } = req.params;
-      const { product_name, price, quantity, category_id } = req.body;
-  
-      if (!product_name || !price || !quantity || !category_id) {
-        return res.status(400).json({ message: "All fields are required" });
+ // new add 
+ // Update product by product_id
+exports.UpdateProduct = (req, res) => {
+  const { product_id } = req.params;
+  const { product_name, price, quantity, category_id } = req.body;
+
+  const sql = `
+      UPDATE tbl_products 
+      SET product_name = ?, price = ?, quantity = ?, category_id = ? 
+      WHERE product_id = ?
+  `;
+
+  db.query(sql, [product_name, price, quantity, category_id, product_id], (err, result) => {
+      if (err) {
+          console.error("Error updating product:", err);
+          return res.status(500).json({ message: "Error updating product", error: err });
       }
-  
-      const product = await db.Product.findByPk(product_id);
-  
-      if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
+      
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ message: "Product not found" });
       }
+      
+      res.status(200).json({ message: "Product updated successfully" });
+  });
+};
+
+// Delete product by product_id
+exports.DeleteProduct = (req, res) => {
+  const { product_id } = req.params;
+
+  const sql = "DELETE FROM tbl_products WHERE product_id = ?";
   
-      await product.update({ product_name, price, quantity, category_id });
-      res.status(200).json({ message: 'Product updated successfully' });
-    } catch (error) {
-      console.error("Error updating product:", error);
-      res.status(500).json({ message: 'Error updating product', error: error.message });
-    }
-  };
-  
-  
-  // Delete product
-  exports.deleteProduct = async (req, res) => {
-    try {
-      const { product_id } = req.params;
-      const product = await db.Product.findByPk(product_id);
-  
-      if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
+  db.query(sql, [product_id], (err, result) => {
+      if (err) {
+          console.error("Error deleting product:", err);
+          return res.status(500).json({ message: "Error deleting product", error: err });
       }
-  
-      await product.destroy();
-      res.status(200).json({ message: 'Product deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ message: 'Error deleting product', error: error.message });
-    }
-  };
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json({ message: "Product deleted successfully" });
+  });
+};
