@@ -20,7 +20,8 @@ function Inventory() {
   const [newProduct, setNewProduct] = useState({
     category_id: '',
     product_name: '',
-    price: ''
+    price: '',
+    quantity:''
   });
   const [newCategory, setNewCategory] = useState({
     category_name: ''
@@ -83,12 +84,14 @@ function Inventory() {
       const res = await api.post('http://localhost:8081/api/addProduct', {
         product_name: newProduct.product_name,
         price: parseFloat(newProduct.price),
+        quantity: newProduct.quantity,
         category_id: newProduct.category_id
+        
       });
       
       alert('Product added successfully');
       setShowAddProductForm(false);
-      setNewProduct({ category_id: '', product_name: '', price: '' });
+      setNewProduct({ category_id: '', product_name: '', price: '' ,quantity:''});
       
       // Refresh products list if the current category is selected
       if (selectedCategories.some((cat) => cat.value === newProduct.category_id)) {
@@ -123,6 +126,60 @@ function Inventory() {
       setLoading(false);
     }
   };
+
+//newly add 
+const [showUpdateModal, setShowUpdateModal] = useState(false);
+const [productToUpdate, setProductToUpdate] = useState({
+  product_id: '',
+  category_id: '',
+  product_name: '',
+  price: '',
+  quantity: ''
+});
+
+// Function to open modal with the selected product
+const openUpdateModal = (product) => {
+  setProductToUpdate(product);
+  setShowUpdateModal(true);
+};
+
+// Function to handle updating the product fields
+const handleUpdateChange = (e) => {
+  setProductToUpdate({ ...productToUpdate, [e.target.name]: e.target.value });
+};
+
+// Delete product
+const handleDeleteProduct = async (product_id) => {
+  if (window.confirm("Are you sure you want to delete this product?")) {
+    try {
+      await api.delete(`/api/products/${product_id}`);
+      alert("Product deleted successfully");
+      fetchProducts(selectedCategories[0]?.value); // Refresh product list
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Failed to delete product");
+    }
+  }
+};
+
+// Function to update the product
+const handleUpdateProduct = async () => {
+  try {
+    await api.put(`/api/products/${productToUpdate.product_id}`, {
+      product_name: productToUpdate.product_name,
+      price: parseFloat(productToUpdate.price),
+      quantity: parseInt(productToUpdate.quantity),
+      category_id: productToUpdate.category_id
+    });
+    alert("Product updated successfully");
+    setShowUpdateModal(false);
+    fetchProducts(selectedCategories[0]?.value); // Refresh product list
+  } catch (error) {
+    console.error("Error updating product:", error);
+    alert("Failed to update product");
+  }
+};
+
 
   return (
     <div 
@@ -195,13 +252,13 @@ function Inventory() {
             </div>
           )}
 
-          {/* Products Grid */}
+          {/* DIsplay by fillter  */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
             {loading ? (
               <div className="col-span-full text-center py-4">Loading...</div>
             ) : products.length === 0 ? (
               <div className="col-span-full text-center py-4 text-gray-500">
-                No products available for the selected categories.
+                No products available for the selected categories. 
               </div>
             ) : (
               products.map((product) => (
@@ -209,6 +266,104 @@ function Inventory() {
                   <h3 className="font-medium text-gray-800">{product.product_name}</h3>
                   <p className="text-sm text-gray-600 mt-1">{`₱${parseFloat(product.price).toFixed(2)}`}</p>
                   <p className="text-xs text-gray-500 mt-1">{product.category_name}</p>
+                  <p className="text-xs text-gray-500 mt-1">Quantity:{product.quantity}</p>
+                  {/*button to update the product list*/}
+                  <button
+                   onClick={() => openUpdateModal(product)}
+                   className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+>
+                  Update Items
+                    </button>
+                  {/*button to delete the product list*/}
+                  <button
+                  onClick={() => handleDeleteProduct(product.product_id)}
+                  className="bg-red-500 text-white py-1.5 px-3 rounded hover:bg-red-900 transition-colors text-sm"
+>
+                  Delete Items
+                   </button>
+
+{/*modal for update */}
+{showUpdateModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <h3 className="text-lg font-medium mb-4">Update Product</h3>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Product Name
+          </label>
+          <input
+            name="product_name"
+            value={productToUpdate.product_name}
+            onChange={handleUpdateChange}
+            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+            type="text"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Price
+          </label>
+          <input
+            name="price"
+            value={productToUpdate.price}
+            onChange={handleUpdateChange}
+            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+            type="number"
+            step="0.01"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Quantity
+          </label>
+          <input
+            name="quantity"
+            value={productToUpdate.quantity}
+            onChange={handleUpdateChange}
+            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+            type="number"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Category
+          </label>
+          <select
+            name="category_id"
+            value={productToUpdate.category_id}
+            onChange={handleUpdateChange}
+            className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category.category_id} value={category.category_id}>
+                {category.category_name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="mt-6 flex justify-end space-x-3">
+        <button
+          type="button"
+          onClick={() => setShowUpdateModal(false)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleUpdateProduct}
+          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+                  
                 </div>
               ))
             )}
@@ -255,7 +410,8 @@ function Inventory() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                      className="block text-sm font-medium text-gray-700 mb-1">
                         Price
                       </label>
                       <input
@@ -268,6 +424,23 @@ function Inventory() {
                         required
                       />
                     </div>
+                    <div>
+                      <label 
+                      className="block text-sm font-medium text-gray-700 mb-1">
+                        Quantity
+                      </label>
+                      <input
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        type="number"
+                        placeholder="Enter Product Quantity"
+                        value={newProduct.quantity}
+                        onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
+                        required
+                      />
+                    </div>
+
+
+
                   </div>
 
                   <div className="mt-6 flex justify-end space-x-3">

@@ -1,92 +1,83 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { categories } from './Items/items';
 
-const formatCurrency = (amount) => {
-  return `₱${amount.toLocaleString()}`;
-};
-
-const categoryOptions = Object.keys(categories).map(category => ({
-  value: category,
-  label: category === 'schoolsupplies' ? 'School Supplies' : category.charAt(0).toUpperCase() + category.slice(1),
-}));
+const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
 
 function Home() {
   const [cart, setCart] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [cashGiven, setCashGiven] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const addToCart = (item, optionName) => {
-    const itemPrice = item.options
-      ? item.options.find(option => option.name === optionName).price
-      : item.price;
-
-    const itemInCart = cart.find(cartItem => cartItem.name === item.name && cartItem.option === optionName);
-    if (itemInCart) {
-      setCart(cart.map(cartItem =>
-        cartItem.name === item.name && cartItem.option === optionName
-          ? { ...cartItem, quantity: cartItem.quantity + 1 }
-          : cartItem
-      ));
-    } else {
-      setCart([...cart, { ...item, price: itemPrice, option: optionName, quantity: 1 }]);
-    }
-  };
-
-  const removeFromCart = (item, optionName) => {
-    setCart(cart.filter(cartItem => !(cartItem.name === item.name && cartItem.option === optionName)));
-  };
-
-  const calculateTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
-  const handleCheckout = async () => {
-    setIsModalOpen(true);
-
-    try {
-      const response = await fetch('http://localhost:4000/print', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          cart,
-          total: calculateTotal(),
-        }),
-      });
-
-      if (response.ok) {
-        console.log('Receipt printed successfully!');
-      } else {
-        console.error('Failed to print receipt.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
   const navigate = useNavigate();
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetch('http://localhost:8081/api/categories')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Categories fetched:', data);
+        setCategories(data.map(category => ({
+          value: category.category_id,
+          label: category.category_name,
+        })));
+      })
+      .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
+  // Fetch products based on selected category
+  const handleCategoryClick = (category_id) => {
+    setSelectedCategory(category_id);
+    fetch(`http://localhost:8081/api/products/${category_id}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(`Products for category ${category_id}:`, data);
+        setProducts(data || []);
+      })
+      .catch(error => console.error('Error fetching products:', error));
+  };
+
+  // Add item to cart with quantity update support
+  const addToCart = (item) => {
+    setCart(prevCart => {
+      const itemInCart = prevCart.find(cartItem => cartItem.product_id === item.product_id);
+      if (itemInCart) {
+        return prevCart.map(cartItem =>
+          cartItem.product_id === item.product_id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
+  };
+
+  const calculateTotal = () => cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
   const handleLogout = () => {
     alert('Logged out successfully');
-    navigate('/'); // Redirect to login page after logout
+    navigate('/');
   };
-
-  const handleCategoryChange = (selectedOptions) => {
-    setSelectedCategories(selectedOptions ? selectedOptions.map(option => option.value) : []);
-  };
-
-  const filteredItems = Object.entries(categories).flatMap(([category, items]) => {
-    return selectedCategories.length === 0 || selectedCategories.includes(category)
-      ? items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      : [];
-  });
 
   const totalAmount = calculateTotal();
   const change = cashGiven - totalAmount;
+
+  // Open and close modal
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  // Complete purchase
+  const handleConfirmPurchase = () => {
+    alert("Purchase confirmed!");
+    setCart([]); // Clear the cart
+    setCashGiven(0); // Reset cash given
+    closeModal(); // Close the modal
+  };
 
   return (
     <div className="p-4 font-sans">
@@ -95,25 +86,15 @@ function Home() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">LCCB BOOKSTORE</h1>
             <div className="flex space-x-4">
-              <button
-                className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]"
-                title="Notifications"
-              >
+              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Notifications">
                 <BellIcon className="h-6 w-6" />
                 <span>Notifications</span>
               </button>
-              <button
-                className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]"
-                title="Inventory"
-              >
+              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Inventory">
                 <InboxIcon className="h-6 w-6" />
                 <span>Inventory</span>
               </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                title="Logout"
-              >
+              <button onClick={handleLogout} className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700" title="Logout">
                 <ArrowLeftOnRectangleIcon className="h-6 w-6" />
                 <span>Logout</span>
               </button>
@@ -121,16 +102,17 @@ function Home() {
           </div>
 
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-700">Filter</h2>
-            <div className="w-1/2">
-              <Select
-                isMulti
-                options={categoryOptions}
-                onChange={handleCategoryChange}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select categories..."
-              />
+            <h2 className="text-lg font-medium text-gray-700">Product Categories</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {categories.map(category => (
+                <button
+                  key={category.value}
+                  onClick={() => handleCategoryClick(category.value)}
+                  className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                  {category.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -145,41 +127,21 @@ function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-            {filteredItems.length === 0 ? (
-              <p>No items available for the selected categories or search term.</p>
-            ) : (
-              filteredItems.map(item => (
-                item.options ? (
-                  <div key={item.name} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md">
-                    <h3 className="font-medium">{item.name}</h3>
-                    {item.options.map(option => (
-                      <div key={option.name} className="flex justify-between items-center mb-2">
-                        <span>{option.name} - {formatCurrency(option.price)}</span>
-                        <button
-                          onClick={() => addToCart(item, option.name)}
-                          className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div key={item.name} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
-                    <span>{item.name} - {formatCurrency(item.price)}</span>
-                    <button
-                      onClick={() => addToCart(item)}
-                      className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                )
-              ))
-            )}
+            {products
+              .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map(item => (
+                <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
+                  <span>{item.product_name} - {formatCurrency(item.price)}</span>
+                  <span>quantity:{item.quantity}</span>
+                  <button onClick={() => addToCart(item)} className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700">
+                    Add to Cart
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
 
+        {/* Cart Component */}
         <div className="w-80 bg-white/30 backdrop-blur-md p-4 border border-gray-200 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4">ITEMS</h2>
           {cart.length === 0 ? (
@@ -188,16 +150,8 @@ function Home() {
             <div>
               <ul>
                 {cart.map((item) => (
-                  <li key={`${item.name}-${item.option}`} className="border-b py-2 flex justify-between items-center">
-                    <span>
-                      {item.name} ({item.option ? item.option : 'No option'}) (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}
-                    </span>
-                    <button
-                      onClick={() => removeFromCart(item, item.option)}
-                      className="ml-4 bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700"
-                    >
-                      Remove
-                    </button>
+                  <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
+                    <span>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
                   </li>
                 ))}
               </ul>
@@ -210,42 +164,43 @@ function Home() {
                   value={cashGiven}
                   onChange={(e) => setCashGiven(Number(e.target.value))}
                 />
-                <button
-                  onClick={handleCheckout}
-                  className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-                >
-                  Checkout
-                </button>
               </div>
+              <button onClick={openModal} className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+                Complete Transaction
+              </button>
             </div>
           )}
         </div>
       </div>
 
+      {/* Modal for Receipt */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-4">Receipt</h2>
-            <div className="mb-4">
-              <h3 className="text-lg font-medium">Items</h3>
-              <ul>
-                {cart.map((item, index) => (
-                  <li key={index}>
-                    {item.name} ({item.option ? item.option : 'No option'}) - {formatCurrency(item.price)} x {item.quantity}
-                  </li>
-                ))}
-              </ul>
+            <ul>
+              {cart.map((item) => (
+                <li key={item.product_id} className="flex justify-between">
+                  <span>{item.product_name} x{item.quantity}</span>
+                  <span>{formatCurrency(item.price * item.quantity)}</span>
+                </li>
+              ))}
+            </ul>
+            <hr className="my-2"/>
+            <div className="flex justify-between">
+              <span>Total:</span>
+              <span>{formatCurrency(totalAmount)}</span>
             </div>
-            <div className="mb-4">
-              <h3 className="text-lg font-medium">Total: {formatCurrency(totalAmount)}</h3>
-              <h3 className="text-lg font-medium">Cash Given: {formatCurrency(cashGiven)}</h3>
-              <h3 className="text-lg font-medium">Change: {formatCurrency(change)}</h3>
+            <div className="flex justify-between">
+              <span>Cash Given:</span>
+              <span>{formatCurrency(cashGiven)}</span>
             </div>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
-            >
-              Close
+            <div className="flex justify-between">
+              <span>Change:</span>
+              <span>{formatCurrency(change)}</span>
+            </div>
+            <button onClick={handleConfirmPurchase} className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+              Confirm Purchase
             </button>
           </div>
         </div>

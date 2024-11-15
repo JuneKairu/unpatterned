@@ -34,10 +34,10 @@ exports.Login = (req, res) => {
 
 // Add product
 exports.AddProduct = (req, res) => {
-    const { product_name, price, category_id } = req.body;
-    const sql = "INSERT INTO tbl_products (product_name, price, category_id) VALUES (?, ?, ?)";
+    const { product_name, price, quantity, category_id} = req.body;
+    const sql = "INSERT INTO tbl_products (product_name, price, quantity, category_id) VALUES (?, ?, ?, ?)";
     
-    db.query(sql, [product_name, price, category_id], (err, result) => {
+    db.query(sql, [product_name, price, quantity, category_id ], (err, result) => {
         if (err) {
             console.error("Error adding product:", err);
             return res.status(500).json({ message: "Error adding product", error: err });
@@ -109,3 +109,73 @@ exports.ViewProducts = (req, res) => {
         return res.json(data);
     });
 };
+
+//newly added 
+// Controller to get all categories from `tbl_productcategory`
+exports.getAllCategories = (req, res) => {
+    const sql = 'SELECT category_id AS id, category_name AS displayName FROM tbl_productcategory';
+    db.query(sql, (err, data) => {
+      if (err) {
+        console.error('Error fetching categories:', err);
+        res.status(500).json({ message: 'Error fetching categories' });
+      } else {
+        res.json(data);
+      }
+    });
+  };
+  
+  exports.getProductsByCategoryId = (req, res) => {
+    const { category_id } = req.params;
+    const sql = 'SELECT product_id AS id, product_name AS name, price FROM tbl_products WHERE category_id = ?';
+    db.query(sql, [category_id], (err, data) => {
+      if (err) {
+        console.error('Error fetching products:', err);
+        res.status(500).json({ message: 'Error fetching products' });
+      } else {
+        res.json(data);
+      }
+    });
+  };
+  
+
+
+  exports.updateProduct = async (req, res) => {
+    try {
+      const { product_id } = req.params;
+      const { product_name, price, quantity, category_id } = req.body;
+  
+      if (!product_name || !price || !quantity || !category_id) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+  
+      const product = await db.Product.findByPk(product_id);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      await product.update({ product_name, price, quantity, category_id });
+      res.status(200).json({ message: 'Product updated successfully' });
+    } catch (error) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ message: 'Error updating product', error: error.message });
+    }
+  };
+  
+  
+  // Delete product
+  exports.deleteProduct = async (req, res) => {
+    try {
+      const { product_id } = req.params;
+      const product = await db.Product.findByPk(product_id);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      await product.destroy();
+      res.status(200).json({ message: 'Product deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting product', error: error.message });
+    }
+  };
