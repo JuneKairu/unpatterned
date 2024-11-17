@@ -21,3 +21,4 @@ router.put('/products/:product_id', controller.UpdateProduct);// Update product 
 router.delete('/products/:product_id', controller.DeleteProduct);// Delete product by ID inventory page
 
 module.exports = router;
+//test 12323132131321
