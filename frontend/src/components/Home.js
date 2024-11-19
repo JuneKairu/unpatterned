@@ -41,12 +41,25 @@ function Home() {
       .catch(error => console.error('Error fetching products:', error));
   };
 
-  // Add item to cart with quantity update support
+  // Add item to cart with quantity deduction from stock
   const addToCart = (item) => {
-    setCart(prevCart => {
-      const itemInCart = prevCart.find(cartItem => cartItem.product_id === item.product_id);
+    if (item.quantity === 0) {
+      alert("Item is out of stock!");
+      return;
+    }
+
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.product_id === item.product_id
+          ? { ...product, quantity: product.quantity - 1 }
+          : product
+      )
+    );
+
+    setCart((prevCart) => {
+      const itemInCart = prevCart.find((cartItem) => cartItem.product_id === item.product_id);
       if (itemInCart) {
-        return prevCart.map(cartItem =>
+        return prevCart.map((cartItem) =>
           cartItem.product_id === item.product_id
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
@@ -55,6 +68,27 @@ function Home() {
         return [...prevCart, { ...item, quantity: 1 }];
       }
     });
+  };
+
+  // Remove or decrement item in cart
+  const decrementCartItem = (item) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((cartItem) =>
+          cartItem.product_id === item.product_id
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        )
+        .filter((cartItem) => cartItem.quantity > 0)
+    );
+
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.product_id === item.product_id
+          ? { ...product, quantity: product.quantity + 1 }
+          : product
+      )
+    );
   };
 
   const calculateTotal = () => cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -132,7 +166,7 @@ function Home() {
               .map(item => (
                 <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
                   <span>{item.product_name} - {formatCurrency(item.price)}</span>
-                  <span>quantity:{item.quantity}</span>
+                  <span>quantity: {item.quantity}</span>
                   <button onClick={() => addToCart(item)} className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700">
                     Add to Cart
                   </button>
@@ -152,6 +186,12 @@ function Home() {
                 {cart.map((item) => (
                   <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
                     <span>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
+                    <button
+                      onClick={() => decrementCartItem(item)}
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -186,7 +226,7 @@ function Home() {
                 </li>
               ))}
             </ul>
-            <hr className="my-2"/>
+            <hr className="my-2" />
             <div className="flex justify-between">
               <span>Total:</span>
               <span>{formatCurrency(totalAmount)}</span>
@@ -199,9 +239,20 @@ function Home() {
               <span>Change:</span>
               <span>{formatCurrency(change)}</span>
             </div>
-            <button onClick={handleConfirmPurchase} className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-              Confirm Purchase
-            </button>
+            <div className="mt-4 flex space-x-2">
+              <button
+                onClick={closeModal}
+                className="w-1/2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleConfirmPurchase}
+                className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              >
+                Confirm Purchase
+              </button>
+            </div>
           </div>
         </div>
       )}
