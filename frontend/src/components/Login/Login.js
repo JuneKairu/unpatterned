@@ -40,7 +40,7 @@ function Login() {
         }}
       >
       </div>
-      <div className="w-1/2 flex justify-center items-center">
+      <div className="w-1/2 flex justify-center items-center bg-blue-700">
 
       <div className="flex items-center justify-end p-4">
         <form onSubmit={handleSubmit} className="w-96 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">

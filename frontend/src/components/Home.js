@@ -10,6 +10,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categorySearch, setCategorySearch] = useState('');
   const [cashGiven, setCashGiven] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,6 +41,11 @@ function Home() {
       })
       .catch(error => console.error('Error fetching products:', error));
   };
+
+  // Filter categories based on search
+  const filteredCategories = categories.filter(category =>
+    category.label.toLowerCase().includes(categorySearch.toLowerCase())
+  );
 
   // Add item to cart with quantity deduction from stock
   const addToCart = (item) => {
@@ -101,16 +107,14 @@ function Home() {
   const totalAmount = calculateTotal();
   const change = cashGiven - totalAmount;
 
-  // Open and close modal
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  // Complete purchase
   const handleConfirmPurchase = () => {
     alert("Purchase confirmed!");
-    setCart([]); // Clear the cart
-    setCashGiven(0); // Reset cash given
-    closeModal(); // Close the modal
+    setCart([]);
+    setCashGiven(0);
+    closeModal();
   };
 
   return (
@@ -137,16 +141,29 @@ function Home() {
 
           <div className="mb-6">
             <h2 className="text-lg font-medium text-gray-700">Product Categories</h2>
-            <div className="grid grid-cols-3 gap-4">
-              {categories.map(category => (
-                <button
-                  key={category.value}
-                  onClick={() => handleCategoryClick(category.value)}
-                  className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                >
-                  {category.label}
-                </button>
-              ))}
+            <div className="mb-4">
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+                placeholder="Search categories..."
+              />
+              <div className="grid grid-cols-3 gap-4">
+                {filteredCategories.map(category => (
+                  <button
+                    key={category.value}
+                    onClick={() => handleCategoryClick(category.value)}
+                    className={`p-4 ${
+                      selectedCategory === category.value 
+                        ? 'bg-indigo-700' 
+                        : 'bg-indigo-600'
+                    } text-white rounded-lg hover:bg-indigo-700`}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -164,12 +181,23 @@ function Home() {
             {products
               .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
               .map(item => (
-                <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
-                  <span>{item.product_name} - {formatCurrency(item.price)}</span>
-                  <span>quantity: {item.quantity}</span>
-                  <button onClick={() => addToCart(item)} className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700">
-                    Add to Cart
-                  </button>
+                <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md">
+                  <div className="flex flex-col space-y-2">
+                    <div className="flex justify-between items-start">
+                      <span className="font-medium">{item.product_name}</span>
+                      <span className="font-bold">{formatCurrency(item.price)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Stock: {item.quantity}</span>
+                      <button 
+                        onClick={() => addToCart(item)} 
+                        className="bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700 disabled:bg-gray-400"
+                        disabled={item.quantity === 0}
+                      >
+                        {item.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
           </div>
@@ -198,14 +226,18 @@ function Home() {
               <div className="mt-4 text-right">
                 <h3 className="text-xl font-semibold">Total: {formatCurrency(totalAmount)}</h3>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Cash Given"
-                  className="mt-2 p-2 border border-gray-300 rounded"
+                  className="mt-2 p-2 border border-gray-300 rounded w-full"
                   value={cashGiven}
                   onChange={(e) => setCashGiven(Number(e.target.value))}
                 />
               </div>
-              <button onClick={openModal} className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+              <button 
+                onClick={openModal} 
+                className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400"
+                disabled={cart.length === 0 || cashGiven < totalAmount}
+              >
                 Complete Transaction
               </button>
             </div>
