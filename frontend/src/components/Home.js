@@ -10,7 +10,6 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categorySearch, setCategorySearch] = useState('');
   const [cashGiven, setCashGiven] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,11 +40,6 @@ function Home() {
       })
       .catch(error => console.error('Error fetching products:', error));
   };
-
-  // Filter categories based on search
-  const filteredCategories = categories.filter(category =>
-    category.label.toLowerCase().includes(categorySearch.toLowerCase())
-  );
 
   // Add item to cart with quantity deduction from stock
   const addToCart = (item) => {
@@ -107,15 +101,79 @@ function Home() {
   const totalAmount = calculateTotal();
   const change = cashGiven - totalAmount;
 
+  // Open and close modal
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleConfirmPurchase = () => {
-    alert("Purchase confirmed!");
-    setCart([]);
-    setCashGiven(0);
-    closeModal();
+// FRONTEND: Updated handleConfirmPurchase for your React component
+const handleConfirmPurchase = async () => {
+  if (cart.length === 0) {
+      alert('Cart is empty');
+      return;
+  }
+
+  if (cashGiven < totalAmount) {
+      alert('Insufficient cash given');
+      return;
+  }
+
+  const transactionId = `T${Date.now()}`; // Generate unique transaction ID
+  const createdAt = new Date().toISOString();
+
+  const payload = {
+      transaction_id: transactionId,
+      created_at: createdAt,
+      products: cart.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity
+      })),
+      total_amount: totalAmount
   };
+
+  try {
+      const response = await fetch('http://localhost:8081/api/transactions', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Transaction failed');
+      }
+
+      const result = await response.json();
+
+      // Clear cart and close modal
+      setCart([]);
+      setCashGiven(0);
+      closeModal();
+      
+      // Show success message
+      alert('Transaction completed successfully!');
+      
+      // Refresh products list to show updated quantities
+      if (selectedCategory) {
+          handleCategoryClick(selectedCategory);
+      }
+
+  } catch (error) {
+      console.error('Transaction failed:', error);
+      alert(`Transaction failed: ${error.message}`);
+  }
+};
+
+
+
+const removeFromCart = (productId) => {
+  setCart((prevCart) =>
+      prevCart.filter((item) => item.product_id !== productId)
+  );
+};
+
+
 
   return (
     <div className="p-4 font-sans">
@@ -141,29 +199,16 @@ function Home() {
 
           <div className="mb-6">
             <h2 className="text-lg font-medium text-gray-700">Product Categories</h2>
-            <div className="mb-4">
-              <input
-                type="text"
-                value={categorySearch}
-                onChange={(e) => setCategorySearch(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg mb-4"
-                placeholder="Search categories..."
-              />
-              <div className="grid grid-cols-3 gap-4">
-                {filteredCategories.map(category => (
-                  <button
-                    key={category.value}
-                    onClick={() => handleCategoryClick(category.value)}
-                    className={`p-4 ${
-                      selectedCategory === category.value 
-                        ? 'bg-indigo-700' 
-                        : 'bg-indigo-600'
-                    } text-white rounded-lg hover:bg-indigo-700`}
-                  >
-                    {category.label}
-                  </button>
-                ))}
-              </div>
+            <div className="grid grid-cols-3 gap-4">
+              {categories.map(category => (
+                <button
+                  key={category.value}
+                  onClick={() => handleCategoryClick(category.value)}
+                  className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                  {category.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -181,23 +226,12 @@ function Home() {
             {products
               .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
               .map(item => (
-                <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md">
-                  <div className="flex flex-col space-y-2">
-                    <div className="flex justify-between items-start">
-                      <span className="font-medium">{item.product_name}</span>
-                      <span className="font-bold">{formatCurrency(item.price)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Stock: {item.quantity}</span>
-                      <button 
-                        onClick={() => addToCart(item)} 
-                        className="bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700 disabled:bg-gray-400"
-                        disabled={item.quantity === 0}
-                      >
-                        {item.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-                      </button>
-                    </div>
-                  </div>
+                <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
+                  <span>{item.product_name} - {formatCurrency(item.price)}</span>
+                  <span>quantity: {item.quantity}</span>
+                  <button onClick={() => addToCart(item)} className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700">
+                    Add to Cart
+                  </button>
                 </div>
               ))}
           </div>
@@ -211,33 +245,27 @@ function Home() {
           ) : (
             <div>
               <ul>
-                {cart.map((item) => (
-                  <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
-                    <span>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
-                    <button
-                      onClick={() => decrementCartItem(item)}
-                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
+              {cart.map((item) => (
+    <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
+        <span>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
+        <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">
+            Remove
+        </button>
+    </li>
+))}
+
               </ul>
               <div className="mt-4 text-right">
                 <h3 className="text-xl font-semibold">Total: {formatCurrency(totalAmount)}</h3>
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Cash Given"
-                  className="mt-2 p-2 border border-gray-300 rounded w-full"
+                  className="mt-2 p-2 border border-gray-300 rounded"
                   value={cashGiven}
                   onChange={(e) => setCashGiven(Number(e.target.value))}
                 />
               </div>
-              <button 
-                onClick={openModal} 
-                className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400"
-                disabled={cart.length === 0 || cashGiven < totalAmount}
-              >
+              <button onClick={openModal} className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
                 Complete Transaction
               </button>
             </div>
@@ -272,19 +300,20 @@ function Home() {
               <span>{formatCurrency(change)}</span>
             </div>
             <div className="mt-4 flex space-x-2">
-              <button
-                onClick={closeModal}
-                className="w-1/2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-              >
-                Back
-              </button>
-              <button
-                onClick={handleConfirmPurchase}
-                className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-              >
-                Confirm Purchase
-              </button>
-            </div>
+  <button
+    onClick={closeModal}
+    className="w-1/2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+  >
+    Back
+  </button>
+  <button
+    onClick={handleConfirmPurchase}
+    className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+  >
+    Confirm Purchase
+  </button>
+</div>
+
           </div>
         </div>
       )}

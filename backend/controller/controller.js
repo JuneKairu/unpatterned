@@ -184,3 +184,135 @@ exports.DeleteProduct = (req, res) => {
       res.status(200).json({ message: "Product deleted successfully" });
   });
 };
+//try new
+exports.CreateTransaction = (req, res) => {
+    const { transaction_id, created_at, products, total_amount } = req.body;
+
+    // First, insert the transaction record
+    const transactionSql = "INSERT INTO tbl_transactions (transaction_id, created_at, total_amount) VALUES (?, ?, ?)";
+    
+    db.query(transactionSql, [transaction_id, created_at, total_amount], (err, transactionResult) => {
+        if (err) {
+            console.error("Error creating transaction:", err);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Error creating transaction", 
+                error: err.message 
+            });
+        }
+
+        // Array to store all update promises
+        let completedUpdates = 0;
+        let hasError = false;
+
+        // Process each product
+        products.forEach(product => {
+            // Update product quantity
+            const updateProductSql = "UPDATE tbl_products SET quantity = quantity - ? WHERE product_id = ?";
+            
+            db.query(updateProductSql, [product.quantity, product.product_id], (updateErr, updateResult) => {
+                if (updateErr) {
+                    hasError = true;
+                    console.error("Error updating product quantity:", updateErr);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Error updating product quantity",
+                        error: updateErr.message
+                    });
+                }
+
+                // Insert transaction detail
+                const detailSql = "INSERT INTO tbl_transaction_details (transaction_id, product_id, quantity) VALUES (?, ?, ?)";
+                
+                db.query(detailSql, [transaction_id, product.product_id, product.quantity], (detailErr, detailResult) => {
+                    if (detailErr) {
+                        hasError = true;
+                        console.error("Error inserting transaction detail:", detailErr);
+                        return res.status(500).json({
+                            success: false,
+                            message: "Error inserting transaction detail",
+                            error: detailErr.message
+                        });
+                    }
+
+                    completedUpdates++;
+
+                    // If all updates are completed and no errors occurred, send success response
+                    if (completedUpdates === products.length && !hasError) {
+                        res.status(200).json({
+                            success: true,
+                            message: "Transaction completed successfully",
+                            transaction_id
+                        });
+                    }
+                });
+            });
+        });
+    });
+};
+
+exports.GetTransaction = (req, res) => {
+    const { transaction_id } = req.params;
+    
+    const sql = `
+        SELECT 
+            t.transaction_id,
+            t.created_at,
+            t.total_amount,
+            td.product_id,
+            td.quantity,
+            p.product_name,
+            p.price
+        FROM tbl_transactions t
+        JOIN tbl_transaction_details td ON t.transaction_id = td.transaction_id
+        JOIN tbl_products p ON td.product_id = p.product_id
+        WHERE t.transaction_id = ?
+    `;
+    
+    db.query(sql, [transaction_id], (err, data) => {
+        if (err) {
+            console.error("Error fetching transaction:", err);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Error fetching transaction", 
+                error: err.message 
+            });
+        }
+        return res.json({
+            success: true,
+            data: data
+        });
+    });
+};
+//added 11/25/24
+// Add this function to your existing controller.js
+
+exports.getSalesData = (req, res) => {
+    const sql = `
+        SELECT 
+            t.created_at as created_date,
+            t.total_amount,
+            p.product_name,
+            p.price as product_price,
+            td.quantity
+        FROM tbl_transactions t
+        JOIN tbl_transaction_details td ON t.transaction_id = td.transaction_id
+        JOIN tbl_products p ON td.product_id = p.product_id
+        ORDER BY t.created_at DESC
+    `;
+    
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.error("Error fetching sales data:", err);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Error fetching sales data", 
+                error: err.message 
+            });
+        }
+        return res.json({
+            success: true,
+            data: data
+        });
+    });
+};

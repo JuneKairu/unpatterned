@@ -20,5 +20,11 @@ router.get('/fproducts/:category_id', controller.getProductsByCategoryId); // fe
 router.put('/products/:product_id', controller.UpdateProduct);// Update product by ID in inventory page
 router.delete('/products/:product_id', controller.DeleteProduct);// Delete product by ID inventory page
 
+// Transaction routes
+router.post('/transactions', controller.CreateTransaction);
+router.get('/transactions/:transaction_id', controller.GetTransaction);
+//added 11/22/24
+router.get('/sales-data', controller.getSalesData);
+
 module.exports = router;
 //test 12323132131321
