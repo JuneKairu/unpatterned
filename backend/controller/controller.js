@@ -167,23 +167,39 @@ exports.UpdateProduct = (req, res) => {
 
 // Delete product by product_id
 exports.DeleteProduct = (req, res) => {
-  const { product_id } = req.params;
+    const { product_id } = req.params;
 
-  const sql = "DELETE FROM tbl_products WHERE product_id = ?";
-  
-  db.query(sql, [product_id], (err, result) => {
-      if (err) {
-          console.error("Error deleting product:", err);
-          return res.status(500).json({ message: "Error deleting product", error: err });
-      }
+    const deleteTransactionsSql = `
+        DELETE FROM tbl_transaction_details 
+        WHERE product_id = ?;
+    `;
+    const deleteProductSql = `
+        DELETE FROM tbl_products 
+        WHERE product_id = ?;
+    `;
 
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ message: "Product not found" });
-      }
+    // Delete related rows in tbl_transaction_details first
+    db.query(deleteTransactionsSql, [product_id], (err, transactionResult) => {
+        if (err) {
+            console.error("Error deleting related transaction details:", err);
+            return res.status(500).json({ message: "Error deleting related transaction details", error: err });
+        }
 
-      res.status(200).json({ message: "Product deleted successfully" });
-  });
-};
+        // Then delete the product
+        db.query(deleteProductSql, [product_id], (err, productResult) => {
+            if (err) {
+                console.error("Error deleting product:", err);
+                return res.status(500).json({ message: "Error deleting product", error: err });
+            }
+
+            if (productResult.affectedRows === 0) {
+                return res.status(404).json({ message: "Product not found" });
+            }
+
+            res.status(200).json({ message: "Product and related transaction details deleted successfully" });
+        });
+    });
+}
 //try new
 exports.CreateTransaction = (req, res) => {
     const { transaction_id, created_at, products, total_amount } = req.body;
