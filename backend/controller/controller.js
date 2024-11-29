@@ -199,9 +199,8 @@ exports.DeleteProduct = (req, res) => {
             res.status(200).json({ message: "Product and related transaction details deleted successfully" });
         });
     });
-};
-
-//add
+}
+//try new
 exports.CreateTransaction = (req, res) => {
     const { transaction_id, created_at, products, total_amount } = req.body;
 
@@ -302,6 +301,8 @@ exports.GetTransaction = (req, res) => {
     });
 };
 //added 11/25/24
+// Add this function to your existing controller.js
+
 exports.getSalesData = (req, res) => {
     const sql = `
         SELECT 

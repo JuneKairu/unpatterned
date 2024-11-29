@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import backgroundImage from '../assets/images/background2.jpg';
+
 
 const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
 
@@ -176,8 +178,16 @@ const removeFromCart = (productId) => {
 
 
   return (
-    <div className="p-4 font-sans">
-      <div className="min-h-screen mx-auto flex space-x-8">
+    <div
+      className="flex"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      
         <div className="flex-1 p-6 bg-blue/80 border-gray-200 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">LCCB BOOKSTORE</h1>
@@ -271,7 +281,6 @@ const removeFromCart = (productId) => {
             </div>
           )}
         </div>
-      </div>
 
       {/* Modal for Receipt */}
       {isModalOpen && (
