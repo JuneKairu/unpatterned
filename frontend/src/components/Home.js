@@ -248,10 +248,10 @@ const removeFromCart = (productId) => {
         </div>
 
         {/* Cart Component */}
-        <div className="w-80 bg-white/30 backdrop-blur-md p-4 border border-gray-200 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">ITEMS</h2>
+        <div className="w-80 bg-blue-700 backdrop-blur-md p-4 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">ITEMS</h2>
           {cart.length === 0 ? (
-            <p>Your cart is empty.</p>
+            <p className='text-white'>Your cart is empty.</p>
           ) : (
             <div>
               <ul>
