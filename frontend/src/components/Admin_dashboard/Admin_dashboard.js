@@ -109,7 +109,6 @@ function Admin_dashboard() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
           </div>
-
           {/* Filter Section */}
           <div className="flex space-x-4 mb-4">
             <input

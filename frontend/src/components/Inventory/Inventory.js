@@ -143,59 +143,58 @@ useEffect(() => {
     }
   };
 
-//newly add 
-const [showUpdateModal, setShowUpdateModal] = useState(false);
-const [productToUpdate, setProductToUpdate] = useState({
-  product_id: '',
-  category_id: '',
-  product_name: '',
-  price: '',
-  quantity: ''
-});
+  //newly add 
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [productToUpdate, setProductToUpdate] = useState({
+      product_id: '',
+      category_id: '',
+      product_name: '',
+      price: '',
+      quantity: ''
+    });
 
-// Function to open modal with the selected product
-const openUpdateModal = (product) => {
-  setProductToUpdate(product);
-  setShowUpdateModal(true);
-};
+  // Function to open modal with the selected product
+    const openUpdateModal = (product) => {
+      setProductToUpdate(product);
+      setShowUpdateModal(true);
+    };
 
-// Function to handle updating the product fields
-const handleUpdateChange = (e) => {
-  setProductToUpdate({ ...productToUpdate, [e.target.name]: e.target.value });
-};
+  // Function to handle updating the product fields
+    const handleUpdateChange = (e) => {
+      setProductToUpdate({ ...productToUpdate, [e.target.name]: e.target.value });
+    };
 
-// Delete product
-const handleDeleteProduct = async (product_id) => {
-  if (window.confirm("Are you sure you want to delete this product?")) {
-    try {
-      await api.delete(`/api/products/${product_id}`);
-      alert("Product deleted successfully");
-      fetchProducts(selectedCategories[0]?.value); // Refresh product list
-    } catch (error) {
+  // Delete product
+  const handleDeleteProduct = async (product_id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await api.delete(`/api/products/${product_id}`);
+          alert("Product deleted successfully");
+          fetchProducts(selectedCategories[0]?.value); // Refresh product list
+      } catch (error) {
       console.error("Error deleting product:", error);
       alert("Failed to delete product");
+      }
     }
-  }
-};
+  };
 
-// Function to update the product
-const handleUpdateProduct = async () => {
-  try {
-    await api.put(`/api/products/${productToUpdate.product_id}`, {
-      product_name: productToUpdate.product_name,
-      price: parseFloat(productToUpdate.price),
-      quantity: parseInt(productToUpdate.quantity),
-      category_id: productToUpdate.category_id
-    });
-    alert("Product updated successfully");
-    setShowUpdateModal(false);
-    fetchProducts(selectedCategories[0]?.value); // Refresh product list
-  } catch (error) {
-    console.error("Error updating product:", error);
-    alert("Failed to update product");
-  }
-};
-
+  // Function to update the product
+    const handleUpdateProduct = async () => {
+      try {
+        await api.put(`/api/products/${productToUpdate.product_id}`, {
+          product_name: productToUpdate.product_name,
+          price: parseFloat(productToUpdate.price),
+          quantity: parseInt(productToUpdate.quantity),
+          category_id: productToUpdate.category_id
+        });
+        alert("Product updated successfully");
+        setShowUpdateModal(false);
+        fetchProducts(selectedCategories[0]?.value); // Refresh product list
+      } catch (error) {
+        console.error("Error updating product:", error);
+          alert("Failed to update product");
+        }
+    };
 
   return (
     <div 

@@ -40,12 +40,11 @@ function Login() {
         }}
       >
       </div>
+      
       <div className="w-1/2 flex justify-center items-center bg-blue-700">
-
       <div className="flex items-center justify-end p-4">
         <form onSubmit={handleSubmit} className="w-96 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className='text-3xl font-bold mb-4 text-center'>LCCB BOOKSTORE</h2>
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input

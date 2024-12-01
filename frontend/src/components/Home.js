@@ -167,15 +167,11 @@ const handleConfirmPurchase = async () => {
   }
 };
 
-
-
-const removeFromCart = (productId) => {
-  setCart((prevCart) =>
-      prevCart.filter((item) => item.product_id !== productId)
-  );
-};
-
-
+  const removeFromCart = (productId) => {
+      setCart((prevCart) =>
+        prevCart.filter((item) => item.product_id !== productId)
+      );
+  };
 
   return (
     <div
@@ -188,94 +184,98 @@ const removeFromCart = (productId) => {
       }}
     >
       
-    <div className="flex-1 p-4">
-      <div className="flex flex-col h-full bg-white/80 border-gray-200 rounded-lg shadow-lg">
+        <div className="flex-1 p-4">
+        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">LCCB BOOKSTORE</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">LCCB BOOKSTORE</h1>
 
-        <div className="flex space-x-4">
-          <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Notifications">
-            <BellIcon className="h-6 w-6" />
-              <span>Notifications</span>
-          </button>
-          <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Inventory">
-            <InboxIcon className="h-6 w-6" />
-              <span>Inventory</span>
-            </button>
-          <button onClick={handleLogout} className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700" title="Logout">
-            <ArrowLeftOnRectangleIcon className="h-6 w-6" />
-              <span>Logout</span>
-          </button>
-        </div>
-        </div>
-    
-        <div className="mb-6">
-          <h2 className="text-lg font-medium text-gray-700">Product Categories</h2>
-        <div className="grid grid-cols-3 gap-4">
-          {categories.map(category => (
-            <button
-              key={category.value}
-              onClick={() => handleCategoryClick(category.value)}
-              className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
-        </div>
-
-        <div className="mb-6">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            placeholder="Search items..."
-          />
-        </div>
-
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-          {products
-            .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
-            .map(item => (
-              <div key={item.product_id} className="p-4 bg-white/30 backdrop-blur-md border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
-                <span>{item.product_name} - {formatCurrency(item.price)}</span>
-                <span>quantity: {item.quantity}</span>
-              <button onClick={() => addToCart(item)} className="ml-4 bg-indigo-600 text-white py-1 px-3 rounded hover:bg-indigo-700">
-                Add to Cart
+            <div className="flex space-x-4">
+              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Notifications">
+                <BellIcon className="h-6 w-6" />
+                <span>Notifications</span>
               </button>
-              </div>
-          ))}
-        </div>
-      </div>
-    </div>
+              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Inventory">
+                <InboxIcon className="h-6 w-6" />
+                <span>Inventory</span>
+              </button>
+              <button onClick={handleLogout} className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700" title="Logout">
+                <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
 
+          <div className="mb-6">
+            <h2 className="text-lg font-medium text-gray-700">Product Categories</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {categories.map(category => (
+                <button
+                  key={category.value}
+                  onClick={() => handleCategoryClick(category.value)}
+                  className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 border border-black rounded-lg placeholder-gray-600"
+              placeholder="Search items..."
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            {products
+              .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map(item => (
+                <div key={item.product_id} className="p-4 bg-blue-700 backdrop-blur-md border rounded-lg shadow-md flex justify-between items-center text-white">
+                  <span>{item.product_name}</span>
+                  <span className='ml-4'>Price: {formatCurrency(item.price)}</span>
+                  <span className='ml-4'>Available: {item.quantity}</span>
+                  <button onClick={() => addToCart(item)} className="ml-4 bg-green-600 text-white py-1 px-3 rounded hover:bg-green-800">
+                    Add to Cart
+                  </button>
+                </div>
+              ))}
+          </div>
+        </div>
+        </div>
 
         {/* Cart Component */}
-        <div className="w-80 bg-blue-700 backdrop-blur-md p-4 shadow-lg">
+        <div className="w-78 bg-blue-700 backdrop-blur-md p-4 shadow-lg">
           <h2 className="text-2xl font-bold mb-4 text-white">ITEMS</h2>
           {cart.length === 0 ? (
-            <p className='text-white'>Your cart is empty.</p>
+            <p className='text-red-600 font-medium'>Your cart is empty.</p>
           ) : (
             <div>
               <ul>
               {cart.map((item) => (
-    <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
-        <span>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
-        <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">
-            Remove
-        </button>
-    </li>
-))}
-
+                <li key={item.product_id} className="border-b py-2 flex justify-between items-center">
+                  <span className='mr-2'>{item.product_name} (x{item.quantity}) - {formatCurrency(item.price * item.quantity)}</span>
+                    <button
+                      type='button'
+                      onClick={() => removeFromCart(item.product_id)}
+                      className="px-2 py-2 font-medium text-white bg-red-600 rounded hover:bg-red-800"
+                    >
+                      Remove
+                    </button>
+                </li>
+              ))}
               </ul>
+              
               <div className="mt-4 text-right">
-                <h3 className="text-xl font-semibold">Total: {formatCurrency(totalAmount)}</h3>
+                <h3 className="text-xl font-medium">Total: {formatCurrency(totalAmount)}</h3>
                 <input
                   type="text"
                   placeholder="Cash Given"
-                  className="mt-2 p-2 border border-gray-300 rounded"
+                  className="mt-2 p-2 border border-gray-300 rounded w-full"
                   value={cashGiven}
                   onChange={(e) => setCashGiven(Number(e.target.value))}
                 />
@@ -314,20 +314,19 @@ const removeFromCart = (productId) => {
               <span>{formatCurrency(change)}</span>
             </div>
             <div className="mt-4 flex space-x-2">
-  <button
-    onClick={closeModal}
-    className="w-1/2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-  >
-    Back
-  </button>
-  <button
-    onClick={handleConfirmPurchase}
-    className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-  >
-    Confirm Purchase
-  </button>
-</div>
-
+              <button
+                onClick={closeModal}
+                className="w-1/2 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+              >
+              Back
+              </button>
+              <button
+                onClick={handleConfirmPurchase}
+                className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              >
+              Confirm Purchase
+              </button>
+            </div>
           </div>
         </div>
       )}

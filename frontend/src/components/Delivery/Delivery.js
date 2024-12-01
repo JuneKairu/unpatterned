@@ -113,6 +113,7 @@ function Delivery() {
       }}
     >
       <Navbar />
+
       <div className="flex-1 p-4">
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
           {/* Header Section */}
@@ -126,16 +127,8 @@ function Delivery() {
                 <BellIcon className="h-5 w-5" />
                 <span className="text-sm">Notifications</span>
               </button>
-              <button 
-                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
-                title="Inventory"
-              >
-                <InboxIcon className="h-5 w-5" />
-                <span className="text-sm">Inventory</span>
-              </button>
             </div>
           </div>
-
           {/* Sales Section */}
           <div className="mb-6 flex space-x-4">
             <button 
@@ -152,18 +145,17 @@ function Delivery() {
           </div>
         </div>
       </div>
-      {/* Add Product Modal */}
+          {/* Add Product Modal */}
       {showAddProductForm && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h3 className="text-lg font-medium mb-4">Add New Delivery</h3>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+              <h3 className="text-lg font-medium mb-4">Add New Delivery</h3>
                 <form onSubmit={handleAddProduct}>
                   <div className="space-y-4">
-                    <div>
+                    {/* <div>
                       
                       
-                    </div>
-                    
+                    </div> */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Product Name

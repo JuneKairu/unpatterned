@@ -26,10 +26,10 @@ function Navbar() {
         </button>
         
         <button
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/account')}
           className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
         >
-          HOME
+          ACCOUNT MANAGEMENT
         </button>
 
         <button
