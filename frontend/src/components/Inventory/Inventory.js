@@ -59,21 +59,37 @@ function Inventory() {
     }
   };
 
-  // Fetch products function
-  const fetchProducts = async (categoryId) => {
-    setLoading(true);
-    try {
-      // Updated to match your route: /products/:category_id
-      const res = await api.get(`http://localhost:8081/api/products/${categoryId}`);
-      setProducts(res.data);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch products for multiple categories
+const fetchProducts = async (categoryIds) => {
+  setLoading(true);
+  try {
+    const promises = categoryIds.map((id) =>
+      api.get(`http://localhost:8081/api/products/${id}`)
+    );
+    const responses = await Promise.all(promises);
+
+    // Combine product data from all categories
+    const allProducts = responses.flatMap((res) => res.data);
+    setProducts(allProducts);
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    setError("Failed to load products");
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Update useEffect to handle multiple categories
+useEffect(() => {
+  if (selectedCategories.length > 0) {
+    const categoryIds = selectedCategories.map((category) => category.value);
+    fetchProducts(categoryIds);
+  } else {
+    setProducts([]);
+  }
+}, [selectedCategories]);
+
 
   // Handle adding new product
   const handleAddProduct = async (e) => {
