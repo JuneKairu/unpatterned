@@ -10,7 +10,7 @@ const api = axios.create({
   baseURL: 'http://localhost:8081'
 });
 
-function Inventory() {
+function Account_management() {
   // State management and unstate
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -195,7 +195,7 @@ function Inventory() {
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
           {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">INVENTORY</h1>
+            <h1 className="text-2xl font-bold text-gray-800">ACCOUNT MANAGEMENT</h1>
             <div className="flex space-x-4">
               <button 
                 className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
@@ -210,22 +210,31 @@ function Inventory() {
           {/* Action Buttons */}
           <div className="mb-6 flex space-x-4">
             <button 
-              className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+              className="bg-green-500 text-white py-1.5 px-3 rounded hover:bg-green-600 transition-colors text-sm"
               onClick={() => setShowAddProductForm(true)}
               disabled={loading}
             >
-              Add New Product
+              Add Account
             </button>
+
             <button 
-              className="bg-green-500 text-white py-1.5 px-3 rounded hover:bg-green-600 transition-colors text-sm"
+              className="bg-red-500 text-white py-1.5 px-3 rounded hover:bg-red-600 transition-colors text-sm"
               onClick={() => setShowAddCategoryForm(true)}
               disabled={loading}
             >
-              Add New Category
+              Delete Account
+            </button>
+
+            <button 
+              className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+              onClick={() => setShowAddCategoryForm(true)}
+              disabled={loading}
+            >
+              Update Account
             </button>
           </div>
 
-          {/* Category Filter */}
+          {/* Category Filter
           <div className="mb-6">
             <h2 className="text-base font-medium text-gray-700 mb-2">Filter by Category</h2>
             <div className="w-full md:w-1/2">
@@ -242,14 +251,14 @@ function Inventory() {
                 }))}
               />
             </div>
-          </div>
+          </div> */}
 
-          {/* Error Display */}
+          {/* Error Display
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
               {error}
             </div>
-          )}
+          )} */}
 
           {/* Display by filter  */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
@@ -257,7 +266,7 @@ function Inventory() {
               <div className="col-span-full text-center py-4">Loading...</div>
             ) : products.length === 0 ? (
               <div className="col-span-full text-center py-4 text-gray-500">
-                No products available for the selected categories. 
+                No Account found. 
               </div>
             ) : (
               products.map((product) => (
@@ -510,4 +519,4 @@ function Inventory() {
   );
 }
 
-export default Inventory;
+export default Account_management;
