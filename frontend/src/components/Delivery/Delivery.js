@@ -127,13 +127,6 @@ function Delivery() {
                 <BellIcon className="h-5 w-5" />
                 <span className="text-sm">Notifications</span>
               </button>
-              <button 
-                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
-                title="Inventory"
-              >
-                <InboxIcon className="h-5 w-5" />
-                <span className="text-sm">Inventory</span>
-              </button>
             </div>
           </div>
           {/* Sales Section */}
