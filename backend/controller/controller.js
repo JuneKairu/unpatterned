@@ -303,21 +303,29 @@ exports.GetTransaction = (req, res) => {
 //added 11/25/24
 // Add this function to your existing controller.js
 
+// Add this function to your existing controller.js
 exports.getSalesData = (req, res) => {
-    const sql = `
+    const { startDate, endDate } = req.query;
+
+    let sql = `
         SELECT 
-            t.created_at as created_date,
-            t.total_amount,
-            p.product_name,
-            p.price as product_price,
-            td.quantity
+            t.transaction_id,
+            t.created_at AS created_date,
+            t.total_amount
         FROM tbl_transactions t
-        JOIN tbl_transaction_details td ON t.transaction_id = td.transaction_id
-        JOIN tbl_products p ON td.product_id = p.product_id
-        ORDER BY t.created_at DESC
     `;
-    
-    db.query(sql, (err, data) => {
+
+    const queryParams = [];
+
+    // Apply date filter if both startDate and endDate are provided
+    if (startDate && endDate) {
+        sql += ' WHERE DATE(t.created_at) BETWEEN ? AND ?';
+        queryParams.push(startDate, endDate);
+    }
+
+    sql += ' ORDER BY t.created_at DESC';
+
+    db.query(sql, queryParams, (err, data) => {
         if (err) {
             console.error("Error fetching sales data:", err);
             return res.status(500).json({ 
@@ -332,3 +340,4 @@ exports.getSalesData = (req, res) => {
         });
     });
 };
+
