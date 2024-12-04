@@ -30,7 +30,7 @@ function Account_management() {
             <h1 className="text-2xl font-bold text-gray-800">ACCOUNT MANAGEMENT</h1>
             <div className="flex space-x-4">
               <button 
-                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
+                className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors" 
                 title="Notifications"
               >
                 <BellIcon className="h-5 w-5" />
@@ -58,7 +58,7 @@ function Account_management() {
             </button>
 
             <button 
-              className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+              className="bg-blue-700 text-white py-1.5 px-3 rounded hover:bg-blue-800 transition-colors text-sm"
             //   onClick={() => setShowAddCategoryForm(true)}
             //   disabled={loading}
             >

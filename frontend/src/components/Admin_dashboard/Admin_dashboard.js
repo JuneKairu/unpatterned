@@ -98,11 +98,13 @@ function Admin_dashboard() {
       }}
     >
       <Navbar />
+
       <div className="flex-1 p-4">
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
           </div>
+
           <div className="flex space-x-4 mb-4">
             <input
               type="date"
@@ -117,7 +119,7 @@ function Admin_dashboard() {
               onChange={(e) => setEndDate(e.target.value)}
             />
             <button
-              className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors"
+              className="px-4 py-2 bg-[#0442b1] text-white rounded hover:bg-[#033387] transition-colors"
               onClick={() => {
                 setStartDate('');
                 setEndDate('');
@@ -128,6 +130,7 @@ function Admin_dashboard() {
               View All
             </button>
           </div>
+          
           <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm mt-4">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Sales Records</h2>
             {loading && <p>Loading...</p>}
@@ -146,17 +149,18 @@ function Admin_dashboard() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredData.map((sale) => (
                     <tr key={sale.transaction_id}>
-                      <td className="px-4 py-3">{formatDate(sale.created_date)}</td>
-                      <td className="px-4 py-3">{sale.transaction_id}</td>
-                      <td className="px-4 py-3">P{parseFloat(sale.total_amount).toFixed(2)}</td>
-                      <td className="px-4 py-3">
-                        <button
-                          className="px-4 py-2 bg-blue-500 text-white rounded"
-                          onClick={() => fetchTransactionDetails(sale.transaction_id)}
-                        >
-                          View Details
-                        </button>
-                      </td>
+                      
+                        <td className="px-4 py-3 text-center">{formatDate(sale.created_date)}</td>
+                        <td className="px-4 py-3 text-center">{sale.transaction_id}</td>
+                        <td className="px-4 py-3 text-center">P{parseFloat(sale.total_amount).toFixed(2)}</td>
+                        <td className="px-4 py-3 text-center">
+                          <button
+                            className="px-4 py-2 bg-[#0442b1] hover:bg-[#033387] text-white rounded"
+                            onClick={() => fetchTransactionDetails(sale.transaction_id)}
+                          >
+                            View Details
+                          </button>
+                        </td>
                     </tr>
                   ))}
                 </tbody>

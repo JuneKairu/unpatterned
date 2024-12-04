@@ -214,7 +214,7 @@ useEffect(() => {
             <h1 className="text-2xl font-bold text-gray-800">INVENTORY</h1>
             <div className="flex space-x-4">
               <button 
-                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
+                className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors" 
                 title="Notifications"
               >
                 <BellIcon className="h-5 w-5" />
@@ -226,7 +226,7 @@ useEffect(() => {
           {/* Action Buttons */}
           <div className="mb-6 flex space-x-4">
             <button 
-              className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+              className="bg-blue-700 text-white py-1.5 px-3 rounded hover:bg-blue-800 transition-colors text-sm"
               onClick={() => setShowAddProductForm(true)}
               disabled={loading}
             >
@@ -285,7 +285,7 @@ useEffect(() => {
                   {/*button to update the product list*/}
                   <button
                    onClick={() => openUpdateModal(product)}
-                   className="bg-indigo-500 text-white py-1.5 px-3 mt-2 rounded hover:bg-indigo-600 transition-colors text-sm"
+                   className="bg-blue-700 text-white py-1.5 px-3 mt-2 rounded hover:bg-blue-800 transition-colors text-sm"
                   >
                   Update Items
                   </button>
@@ -323,7 +323,7 @@ useEffect(() => {
               name="price"
               value={productToUpdate.price}
               onChange={handleUpdateChange}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
               type="number"
               step="0.01"
             />
@@ -336,7 +336,7 @@ useEffect(() => {
               name="quantity"
               value={productToUpdate.quantity}
               onChange={handleUpdateChange}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
               type="number"
             />
             </div>
@@ -348,7 +348,7 @@ useEffect(() => {
               name="category_id"
               value={productToUpdate.category_id}
               onChange={handleUpdateChange}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
             >
               <option value="">Select Category</option>
                 {categories.map((category) => (
@@ -370,7 +370,7 @@ useEffect(() => {
           </button>
           <button
             onClick={handleUpdateProduct}
-            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded hover:bg-blue-800"
           >
             Save Changes
           </button>
@@ -395,7 +395,7 @@ useEffect(() => {
                         Category
                       </label>
                       <select
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         value={newProduct.category_id}
                         onChange={(e) => setNewProduct({ ...newProduct, category_id: e.target.value })}
                         required
@@ -414,7 +414,7 @@ useEffect(() => {
                         Product Name
                       </label>
                       <input
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         type="text"
                         placeholder="Enter product name"
                         value={newProduct.product_name}
@@ -429,7 +429,7 @@ useEffect(() => {
                         Price
                       </label>
                       <input
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         type="number"
                         step="0.01"
                         placeholder="Enter price"
@@ -444,7 +444,7 @@ useEffect(() => {
                         Quantity
                       </label>
                       <input
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         type="number"
                         placeholder="Enter Product Quantity"
                         value={newProduct.quantity}
@@ -467,7 +467,7 @@ useEffect(() => {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                      className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded hover:bg-blue-800"
                       disabled={loading}
                     >
                       {loading ? 'Adding...' : 'Add Product'}
@@ -489,7 +489,7 @@ useEffect(() => {
                       Category Name
                     </label>
                     <input
-                      className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                       type="text"
                       placeholder="Enter category name"
                       value={newCategory.category_name}
