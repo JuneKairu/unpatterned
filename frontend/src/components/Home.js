@@ -249,7 +249,7 @@ const handleConfirmPurchase = async () => {
         </div>
 
         {/* Cart Component */}
-        <div className="w-78 bg-[#0442b1] backdrop-blur-md p-4 shadow-lg">
+        <div className="w-64 bg-[#0442b1] backdrop-blur-md p-4 shadow-lg">
           <h2 className="text-2xl font-bold mb-4 text-white">ITEMS</h2>
           {cart.length === 0 ? (
             <p className='text-red-600 font-medium'>Your cart is empty.</p>

@@ -117,7 +117,7 @@ function TopSellingProducts() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4 flex space-x-4">
+      <div className="flex space-x-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Start Date</label>
           <input
@@ -140,7 +140,7 @@ function TopSellingProducts() {
         </div>
       </div>
 
-      <div className="h-[500px]">
+      <div className="h-100vh">
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && topProducts.length > 0 && (

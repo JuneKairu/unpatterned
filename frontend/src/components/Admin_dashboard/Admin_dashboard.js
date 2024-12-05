@@ -103,11 +103,12 @@ function Admin_dashboard() {
 
       <div className="flex-1 p-4">
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
-        <Trend />
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
           </div>
-
+          
+          <Trend />
+          
           <div className="flex space-x-4 mb-4">
             <input
               type="date"

@@ -12,7 +12,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-[#0442b1] shadow-md p-4">
+    <div className="flex flex-col w-64 h-100vh bg-[#0442b1] shadow-md p-4">
       <div className="flex items-center mb-8 ml-4">
         <img src={logo} alt="LCCB Logo" className="h-10 w-10 rounded-full" />
         <h1 className="text-2xl font-bold ml-2 text-white">LCCB BOOKSTORE</h1>
