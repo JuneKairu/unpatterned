@@ -340,13 +340,13 @@ exports.getSalesData = (req, res) => {
         });
     });
 };
-// added 12/3/24
+// added 12/4/24
 exports.getTopSellingProducts = (req, res) => {
     const { startDate, endDate } = req.query;
 
     let sql = `
         SELECT 
-            p.product_name,
+            p.product_name AS product_name,
             SUM(td.quantity) AS total_quantity,
             ROUND(SUM(td.quantity * td.price), 2) AS total_revenue
         FROM tbl_transaction_details td
@@ -378,10 +378,11 @@ exports.getTopSellingProducts = (req, res) => {
             });
         }
 
-        // Format revenue to two decimal places
+        // Format revenue to ensure no NaN or duplicate values
         const formattedData = data.map(product => ({
-            ...product,
-            total_revenue: parseFloat(product.total_revenue).toFixed(2)
+            product_name: product.product_name,
+            total_quantity: product.total_quantity,
+            total_revenue: product.total_revenue ? parseFloat(product.total_revenue).toFixed(2) : "0.00",
         }));
 
         return res.json({
