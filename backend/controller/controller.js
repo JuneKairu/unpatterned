@@ -340,4 +340,53 @@ exports.getSalesData = (req, res) => {
         });
     });
 };
+// added 12/3/24
+exports.getTopSellingProducts = (req, res) => {
+    const { startDate, endDate } = req.query;
 
+    let sql = `
+        SELECT 
+            p.product_name,
+            SUM(td.quantity) AS total_quantity,
+            ROUND(SUM(td.quantity * td.price), 2) AS total_revenue
+        FROM tbl_transaction_details td
+        JOIN tbl_transactions t ON td.transaction_id = t.transaction_id
+        JOIN tbl_products p ON td.product_id = p.product_id
+    `;
+
+    const queryParams = [];
+
+    // Apply date filter if both startDate and endDate are provided
+    if (startDate && endDate) {
+        sql += ' WHERE DATE(t.created_at) BETWEEN ? AND ?';
+        queryParams.push(startDate, endDate);
+    }
+
+    sql += `
+        GROUP BY p.product_name
+        ORDER BY total_quantity DESC
+        LIMIT 10
+    `;
+
+    db.query(sql, queryParams, (err, data) => {
+        if (err) {
+            console.error("Error fetching top-selling products:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Error fetching top-selling products",
+                error: err.message,
+            });
+        }
+
+        // Format revenue to two decimal places
+        const formattedData = data.map(product => ({
+            ...product,
+            total_revenue: parseFloat(product.total_revenue).toFixed(2)
+        }));
+
+        return res.json({
+            success: true,
+            topProducts: formattedData,
+        });
+    });
+};

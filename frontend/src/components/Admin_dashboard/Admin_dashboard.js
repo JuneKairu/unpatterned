@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
+import Trend from '../trend/Trend';
 import backgroundImage from '../../assets/images/background2.jpg';
 
 function Admin_dashboard() {
@@ -100,6 +102,7 @@ function Admin_dashboard() {
       <Navbar />
       <div className="flex-1 p-4">
         <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+        <Trend />
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
           </div>

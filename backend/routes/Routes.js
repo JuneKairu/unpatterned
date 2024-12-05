@@ -25,6 +25,7 @@ router.post('/transactions', controller.CreateTransaction);
 router.get('/transactions/:transaction_id', controller.GetTransaction);
 //added 11/22/24
 router.get('/sales-data', controller.getSalesData);
+router.get('/top-selling-products', controller.getTopSellingProducts);
 
 module.exports = router;
 //test 12323132131321
