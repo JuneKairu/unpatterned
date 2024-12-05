@@ -12,7 +12,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-blue-700 shadow-md p-4">
+    <div className="flex flex-col w-64 h-screen bg-[#0442b1] shadow-md p-4">
       <div className="flex items-center mb-8 ml-4">
         <img src={logo} alt="LCCB Logo" className="h-10 w-10 rounded-full" />
         <h1 className="text-2xl font-bold ml-2 text-white">LCCB BOOKSTORE</h1>
@@ -20,28 +20,28 @@ function Navbar() {
       <nav className="flex flex-col space-y-4">
         <button
           onClick={() => navigate('/admin')}
-          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           ADMIN DASHBOARD
         </button>
         
         <button
           onClick={() => navigate('/account')}
-          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           ACCOUNT MANAGEMENT
         </button>
 
         <button
           onClick={() => navigate('/inventory')}
-          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           INVENTORY
         </button>
 
         <button
           onClick={() => navigate('/delivery')}
-          className="text-white hover:bg-blue-600 py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           DELIVERY
         </button>

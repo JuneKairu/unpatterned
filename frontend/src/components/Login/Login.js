@@ -41,7 +41,7 @@ function Login() {
       >
       </div>
       
-      <div className="w-1/2 flex justify-center items-center bg-blue-700">
+      <div className="w-1/2 flex justify-center items-center bg-[#0442b1]">
       <div className="flex items-center justify-end p-4">
         <form onSubmit={handleSubmit} className="w-96 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className='text-3xl font-bold mb-4 text-center'>LCCB BOOKSTORE</h2>
@@ -53,7 +53,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#033387] focus:border-[#033387] sm:text-sm"
             />
           </div>
           <div className="mb-6">
@@ -64,12 +64,12 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#033387] focus:border-[#033387] sm:text-sm"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full py-2 px-4 bg-[#0442b1] text-white font-semibold rounded-lg shadow-md hover:bg-[#033387] focus:outline-none focus:ring-2 focus:ring-[#033387]"
           >
             Login
           </button>

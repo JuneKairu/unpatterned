@@ -213,7 +213,7 @@ const handleConfirmPurchase = async () => {
                 <button
                   key={category.value}
                   onClick={() => handleCategoryClick(category.value)}
-                  className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                  className="p-4 bg-[#0442b1] text-white rounded-lg hover:bg-[#033387]"
                 >
                   {category.label}
                 </button>
@@ -235,7 +235,7 @@ const handleConfirmPurchase = async () => {
             {products
               .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
               .map(item => (
-                <div key={item.product_id} className="p-4 bg-blue-700 backdrop-blur-md border rounded-lg shadow-md flex justify-between items-center text-white">
+                <div key={item.product_id} className="p-4 bg-[#0442b1] backdrop-blur-md border rounded-lg shadow-md flex justify-between items-center text-white">
                   <span>{item.product_name}</span>
                   <span className='ml-4'>Price: {formatCurrency(item.price)}</span>
                   <span className='ml-4'>Available: {item.quantity}</span>
@@ -249,7 +249,7 @@ const handleConfirmPurchase = async () => {
         </div>
 
         {/* Cart Component */}
-        <div className="w-78 bg-blue-700 backdrop-blur-md p-4 shadow-lg">
+        <div className="w-78 bg-[#0442b1] backdrop-blur-md p-4 shadow-lg">
           <h2 className="text-2xl font-bold mb-4 text-white">ITEMS</h2>
           {cart.length === 0 ? (
             <p className='text-red-600 font-medium'>Your cart is empty.</p>
@@ -322,7 +322,7 @@ const handleConfirmPurchase = async () => {
               </button>
               <button
                 onClick={handleConfirmPurchase}
-                className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                className="w-1/2 bg-[#0442b1] text-white py-2 px-4 rounded hover:bg-[#033387]"
               >
               Confirm Purchase
               </button>

@@ -121,7 +121,7 @@ function Delivery() {
             <h1 className="text-2xl font-bold text-gray-800">DELIVERY</h1>
             <div className="flex space-x-4">
               <button 
-                className="flex items-center space-x-2 p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors" 
+                className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors" 
                 title="Notifications"
               >
                 <BellIcon className="h-5 w-5" />
@@ -132,7 +132,7 @@ function Delivery() {
           {/* Sales Section */}
           <div className="mb-6 flex space-x-4">
             <button 
-              className="bg-indigo-500 text-white py-1.5 px-3 rounded hover:bg-indigo-600 transition-colors text-sm"
+              className="bg-blue-700 text-white py-1.5 px-3 rounded hover:bg-blue-800 transition-colors text-sm"
               onClick={() => setShowAddProductForm(true)}
               disabled={loading}
             >
@@ -161,7 +161,7 @@ function Delivery() {
                         Product Name
                       </label>
                       <input
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         type="text"
                         placeholder="Enter product name"
                         value={newProduct.product_name}
@@ -175,7 +175,7 @@ function Delivery() {
                         Price
                       </label>
                       <input
-                        className="w-full p-2 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-blue-600 focus:border-blue-700"
                         type="number"
                         step="0.01"
                         placeholder="Enter price"
@@ -196,7 +196,7 @@ function Delivery() {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                      className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded hover:bg-blue-800"
                       disabled={loading}
                     >
                       {loading ? 'Adding...' : 'Add Product'}
