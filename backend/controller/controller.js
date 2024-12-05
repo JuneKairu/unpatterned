@@ -1,33 +1,122 @@
 const db = require('../dbconnect');
-
+const bcrypt = require('bcrypt'); 
 // Signup function
-exports.Signup = (req, res) => {
-    const sql = "INSERT INTO tb_logins (email, password) VALUES (?)";
-    const values = [req.body.email, req.body.password];
-    
-    db.query(sql, [values], (err, data) => {
+exports.Signup = async (req, res) => {
+    try {
+        const email = req.body.email;
+
+        db.query('SELECT email FROM tb_logins WHERE email = ?', [email], async (err, result) => {
+            if (err) {
+                console.error("Error checking for existing email:", err);
+                return res.status(500).json({ message: "Database error during signup" }); 
+            }
+
+            if (result.length > 0) {
+                return res.status(409).json({ message: "Email already exists" }); // 409 Conflict
+            }
+
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+            const sql = "INSERT INTO tb_logins (email, password) VALUES (?, ?)";
+            const values = [email, hashedPassword];
+
+            db.query(sql, values, (err, data) => {
+                if (err) {
+                    console.error("Signup error:", err);
+                    return res.status(500).json({ message: "Error during signup" });
+                }
+                return res.status(201).json({ message: "Signup successful", data }); 
+            });
+        });
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        return res.status(500).json({ message: "Error during signup" });
+    }
+};
+//////
+exports.getAccounts = (req, res) => {
+    const sql = "SELECT id, email FROM tb_logins"; // Fetch only id and email
+    db.query(sql, (err, data) => {
         if (err) {
-            console.error("Signup error:", err); // Log error for debugging
-            return res.json({ message: "Error during signup", error: err });
+            console.error("Error fetching accounts:", err);
+            return res.status(500).json({ message: "Error fetching accounts" });
         }
-        return res.json({ message: "Signup successful", data });
+        return res.json(data); 
     });
 };
 
-// Login function
+exports.deleteAccount = (req, res) => {
+    const accountId = req.params.accountId;
+    const sql = "DELETE FROM tb_logins WHERE id = ?";
+    db.query(sql, [accountId], (err, result) => {
+        if (err) {
+            console.error("Error deleting account:", err);
+            return res.status(500).json({ message: "Error deleting account" });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+        return res.json({ message: "Account deleted successfully" });
+    });
+};
+exports.updateAccount = (req, res) => {
+    const accountId = req.params.accountId; // Unique identifier for the account
+    const { email, password } = req.body;  // Updated data from the request body
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
+    }
+
+    const updateAccountSql = "UPDATE tb_logins SET email = ?, password = ? WHERE id = ?";
+
+    db.query(updateAccountSql, [email, password, accountId], (err, result) => {
+        if (err) {
+            console.error("Error updating account:", err);
+            return res.status(500).json({ message: "Error updating account." });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Account not found." });
+        }
+
+        return res.status(200).json({ message: "Account updated successfully!" });
+    });
+};
+
+////
+
+
+
 exports.Login = (req, res) => {
-    const sql = "SELECT * FROM tb_logins WHERE email = ? AND password = ?";
-    const values = [req.body.email, req.body.password];
-    
+    const sql = "SELECT * FROM tb_logins WHERE email = ?";
+    const values = [req.body.email];
+
     db.query(sql, values, (err, data) => {
         if (err) {
             console.error("Login error:", err); // Log error for debugging
             return res.json({ message: "Error during login attempt", error: err });
         }
         if (data.length > 0) {
-            return res.json(data);
+            const user = data[0];
+            // Compare the plaintext password with the hashed password
+            bcrypt.compare(req.body.password, user.password, (bcryptErr, isMatch) => {
+                if (bcryptErr) {
+                    console.error("Bcrypt error:", bcryptErr);
+                    return res.status(500).json({ message: "Internal server error" });
+                }
+                if (isMatch) {
+                    // Successful login
+                    return res.json(user);
+                } else {
+                    // Invalid password
+                    return res.status(401).json({ message: "Invalid email or password" });
+                }
+            });
         } else {
-            return res.status(401).json({ message: "Invalid credentials" });
+            // Email not found
+            return res.status(401).json({ message: "Invalid email or password" });
         }
     });
 };
@@ -391,3 +480,4 @@ exports.getTopSellingProducts = (req, res) => {
         });
     });
 };
+//added 12/7/24

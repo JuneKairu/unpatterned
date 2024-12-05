@@ -5,7 +5,13 @@ const controller = require('../controller/controller');
 // Routes
 
 //all get
-router.post('/signup', controller.Signup); //create new account 
+router.post('/signup', controller.Signup); //for new acc
+router.get('/accounts', controller.getAccounts); // To fetch all accounts
+router.delete('/accounts/:accountId', controller.deleteAccount);
+router.put('/accounts/:accountId', controller.updateAccount);
+
+
+
 router.post('/login', controller.Login); // route for logins 
 router.post('/addProduct', controller.AddProduct);// adding new producs
 router.post('/addCategory', controller.AddCategory);// creating new prod category
@@ -26,6 +32,7 @@ router.get('/transactions/:transaction_id', controller.GetTransaction);
 //added 11/22/24
 router.get('/sales-data', controller.getSalesData);
 router.get('/top-selling-products', controller.getTopSellingProducts);
+
 
 module.exports = router;
 //test 12323132131321

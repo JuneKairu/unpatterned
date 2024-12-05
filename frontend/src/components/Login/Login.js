@@ -11,23 +11,22 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:8081/api/Login', { email, password })
-      .then(res => {
-        if (res.data.length > 0) {
-          if (email === 'admin@gmail.com' && password === '123') {
+    try {
+        const res = await axios.post('http://localhost:8081/api/Login', { email, password });
+        if (email === 'admin@gmail.com' && password === '123') {
             navigate('/admin');
-          } else {
-            navigate('/Home');
-          }
         } else {
-          alert("Invalid email or password.");
+            navigate('/Home');
         }
-      })
-      .catch(err => {
-        console.log(err);
-        alert("Invalid email or password.");
-      });
-  }
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("Invalid email or password.");
+        } else {
+            console.error("Login error:", error);
+            alert("An error occurred during login. Please try again.");
+        }
+    }
+};
 
   return (
     <div className="flex min-h-screen">
