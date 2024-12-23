@@ -481,3 +481,62 @@ exports.getTopSellingProducts = (req, res) => {
     });
 };
 //added 12/7/24
+// Add a new delivery
+exports.addDelivery = async (req, res) => {
+    try {
+        const {
+            delivery_date,
+            delivery_time,
+            supplier,
+            product_id,
+            quantity,
+            price,
+            total_amount,
+            contact_number
+        } = req.body;
+
+        const query = `
+            INSERT INTO tbl_deliveries (
+                delivery_date,
+                delivery_time,
+                supplier,
+                product_id,
+                quantity,
+                price,
+                total_amount,
+                contact_number
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        await db.query(query, [
+            delivery_date,
+            delivery_time,
+            supplier,
+            product_id,
+            quantity,
+            price,
+            total_amount,
+            contact_number
+        ]);
+
+        res.status(201).json({ message: 'Delivery added successfully!' });
+    } catch (error) {
+        console.error('Error adding delivery:', error);
+        res.status(500).json({ message: 'Failed to add delivery', error });
+    }
+};
+
+// Get all deliveries
+exports.getAllDeliveries = async (req, res) => {
+    try {
+        const query = `
+            SELECT d.*, p.product_name 
+            FROM tbl_deliveries d 
+            JOIN tbl_products p ON d.product_id = p.product_id
+        `;
+        const [rows] = await db.query(query);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching deliveries:', error);
+        res.status(500).json({ message: 'Failed to fetch deliveries', error });
+    }
+};

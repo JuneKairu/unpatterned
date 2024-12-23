@@ -211,7 +211,7 @@ function AccountManagement() {
 
 
                     <button
-                        className="bg-green-500 text-white py-1.5 px-3 rounded hover:bg-green-600 transition-colors text-sm"
+                        className="bg-blue-700 text-white py-1.5 px-3 rounded hover:bg-blue-800 transition-colors text-sm"
                         onClick={() => setShowAddAccountForm(true)}
                     >
                         Add Account
@@ -227,10 +227,11 @@ function AccountManagement() {
 
                     <table className="table-auto w-full border-collapse border border-gray-300">
                         <thead>
-                            <tr className="bg-gray-200">
+                            <tr className="bg-white">
                                 <th className="border border-gray-300 px-4 py-2">ID</th>
                                 <th className="border border-gray-300 px-4 py-2">Email</th>
                                 <th className="border border-gray-300 px-4 py-2">Actions</th>
+                                <th className="border border-gray-300 px-4 py-2">Total Sales</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -255,12 +256,20 @@ function AccountManagement() {
                                             Delete
                                         </button>
                                     </td>
+                                    <td className="border border-gray-300 px-4 py-2">
+                                    <button
+                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
+                                        >
+                                            View Sales
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
+            
         </div>
     );
 }

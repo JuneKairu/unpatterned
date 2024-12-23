@@ -34,5 +34,10 @@ router.get('/sales-data', controller.getSalesData);
 router.get('/top-selling-products', controller.getTopSellingProducts);
 
 
+// Delivery routes
+router.post('/deliveries', controller.addDelivery);
+router.get('/deliveries', controller.getAllDeliveries);
+
+
 module.exports = router;
 //test 12323132131321
