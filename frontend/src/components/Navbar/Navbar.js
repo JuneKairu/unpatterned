@@ -1,18 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/images/logo.png'; // Ensure this path is correct for your logo image
+import logo from '../../assets/images/logo.png';
 
 function Navbar() {
   const navigate = useNavigate();
 
+  //Logout
   const handleLogout = () => {
-    // Implement your logout logic here (e.g., clearing tokens, redirecting)
     alert('Logged out successfully');
-    navigate('/'); // Redirect to login page after logout
+    navigate('/');
   };
 
   return (
-    <div className="flex flex-col w-64 h-100vh bg-[#0442b1] shadow-md p-4">
+    <div className="flex flex-col w-64 h-100vh bg-[#1565C0] shadow-md p-4">
       <div className="flex items-center mb-8 ml-4">
         <img src={logo} alt="LCCB Logo" className="h-10 w-10 rounded-full" />
         <h1 className="text-2xl font-bold ml-2 text-white">LCCB BOOKSTORE</h1>
@@ -20,28 +20,28 @@ function Navbar() {
       <nav className="flex flex-col space-y-4">
         <button
           onClick={() => navigate('/admin')}
-          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#0D47A1] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           ADMIN DASHBOARD
         </button>
         
         <button
           onClick={() => navigate('/account')}
-          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#0D47A1] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           ACCOUNT MANAGEMENT
         </button>
 
         <button
           onClick={() => navigate('/inventory')}
-          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#0D47A1] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           INVENTORY
         </button>
 
         <button
           onClick={() => navigate('/delivery')}
-          className="text-white hover:bg-[#3e6ab6] py-2 px-4 rounded transition duration-200 font-semibold"
+          className="text-white hover:bg-[#0D47A1] py-2 px-4 rounded transition duration-200 font-semibold"
         >
           DELIVERY
         </button>

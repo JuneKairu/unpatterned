@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BellIcon } from '@heroicons/react/24/outline';
 import Navbar from '../Navbar/Navbar';
-import backgroundImage from '../../assets/images/background2.jpg';
+// import backgroundImage from '../../assets/images/background2.jpg';
 import axios from 'axios';
 
 const api = axios.create({
@@ -110,18 +110,11 @@ function AccountManagement() {
     );
 
     return (
-        <div
-            className="flex"
-            style={{
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '100vh',
-            }}
-        >
-            <Navbar />
+        <div className="flex" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
+           <Navbar />
+
             <div className="flex-1 p-4">
-                <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+                {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold text-gray-800">ACCOUNT MANAGEMENT</h1>
                         <button
@@ -208,8 +201,6 @@ function AccountManagement() {
     </div>
 )}
 
-
-
                     <button
                         className="bg-blue-700 text-white py-1.5 px-3 rounded hover:bg-blue-800 transition-colors text-sm"
                         onClick={() => setShowAddAccountForm(true)}
@@ -225,21 +216,21 @@ function AccountManagement() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
 
-                    <table className="table-auto w-full border-collapse border border-gray-300">
+                    <table className="table-auto w-full border-collapse border border-black">
                         <thead>
                             <tr className="bg-white">
-                                <th className="border border-gray-300 px-4 py-2">ID</th>
-                                <th className="border border-gray-300 px-4 py-2">Email</th>
-                                <th className="border border-gray-300 px-4 py-2">Actions</th>
-                                <th className="border border-gray-300 px-4 py-2">Total Sales</th>
+                                <th className="border border-black px-4 py-2">ID</th>
+                                <th className="border border-black px-4 py-2">Email</th>
+                                <th className="border border-black px-4 py-2">Actions</th>
+                                <th className="border border-black px-4 py-2">Total Sales</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredAccounts.map((account) => (
                                 <tr key={account.id} className="hover:bg-gray-100">
-                                    <td className="border border-gray-300 px-4 py-2">{account.id}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{account.email}</td>
-                                    <td className="border border-gray-300 px-4 py-2 flex gap-2">
+                                    <td className="border border-black px-4 py-2">{account.id}</td>
+                                    <td className="border border-black px-4 py-2">{account.email}</td>
+                                    <td className="border border-black px-4 py-2 flex gap-2">
                                         <button
                                             onClick={() => {
                                                 setSelectedAccount(account);
@@ -256,7 +247,7 @@ function AccountManagement() {
                                             Delete
                                         </button>
                                     </td>
-                                    <td className="border border-gray-300 px-4 py-2">
+                                    <td className="border border-black px-4 py-2">
                                     <button
                                             className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
                                         >
@@ -267,7 +258,7 @@ function AccountManagement() {
                             ))}
                         </tbody>
                     </table>
-                </div>
+                {/* </div> */}
             </div>
             
         </div>

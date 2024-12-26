@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import backgroundImage from '../assets/images/background2.jpg';
+// import backgroundImage from '../assets/images/background2.jpg';
 import InventoryModal from '../components/modals/InventoryModal';
 import NotificationModal from '../components/modals/NotificationModal';
 
@@ -179,26 +179,18 @@ const handleConfirmPurchase = async () => {
   };
 
   return (
-    <div
-      className="flex"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="flex" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
       
         <div className="flex-1 p-4">
-        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+        {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
 
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">LCCB BOOKSTORE</h1>
+            <h1 className="text-3xl font-bold text-[#03045e]">LCCB BOOKSTORE</h1>
 
             <div className="flex space-x-4">
             <button 
   onClick={() => setIsNotificationModalOpen(true)} 
-  className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" 
+  className="flex items-center space-x-2 p-2 bg-[#1565C0] text-white rounded-md hover:bg-[#0D47A1]" 
   title="Notifications"
 >
   <BellIcon className="h-6 w-6" />
@@ -211,7 +203,7 @@ const handleConfirmPurchase = async () => {
 />
               <button 
   onClick={handleInventoryClick} 
-  className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" 
+  className="flex items-center space-x-2 p-2 bg-[#1565C0] text-white rounded-md hover:bg-[#0D47A1]" 
   title="Inventory"
 >
   <InboxIcon className="h-6 w-6" />
@@ -236,7 +228,7 @@ const handleConfirmPurchase = async () => {
                 <button
                   key={category.value}
                   onClick={() => handleCategoryClick(category.value)}
-                  className="p-4 bg-[#0442b1] text-white rounded-lg hover:bg-[#033387]"
+                  className="p-4 bg-[#1565C0] text-white rounded-lg hover:bg-[#0D47A1]"
                 >
                   {category.label}
                 </button>
@@ -258,7 +250,7 @@ const handleConfirmPurchase = async () => {
             {products
               .filter(item => item.product_name && item.product_name.toLowerCase().includes(searchQuery.toLowerCase()))
               .map(item => (
-                <div key={item.product_id} className="p-4 bg-[#0442b1] backdrop-blur-md border rounded-lg shadow-md flex justify-between items-center text-white">
+                <div key={item.product_id} className="p-4 bg-[#1565C0] backdrop-blur-md border rounded-lg shadow-md flex justify-between items-center text-white">
                   <span>{item.product_name}</span>
                   <span className='ml-4'>Price: {formatCurrency(item.price)}</span>
                   <span className='ml-4'>Available: {item.quantity}</span>
@@ -268,14 +260,14 @@ const handleConfirmPurchase = async () => {
                 </div>
               ))}
           </div>
-        </div>
+        {/* </div> */}
         </div>
 
         {/* Cart Component */}
-        <div className="w-64 bg-[#0442b1] backdrop-blur-md p-4 shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-white">ITEMS</h2>
+        <div className="w-72 bg-[#1565C0] backdrop-blur-md p-4 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">ORDERED ITEMS</h2>
           {cart.length === 0 ? (
-            <p className='text-red-600 font-medium'>Your cart is empty.</p>
+            <p className='text-black font-medium'>Your cart is empty.</p>
           ) : (
             <div>
               <ul>
@@ -345,7 +337,7 @@ const handleConfirmPurchase = async () => {
               </button>
               <button
                 onClick={handleConfirmPurchase}
-                className="w-1/2 bg-[#0442b1] text-white py-2 px-4 rounded hover:bg-[#033387]"
+                className="w-1/2 bg-[#1565C0] text-white py-2 px-4 rounded hover:bg-[#0D47A1]"
               >
               Confirm Purchase
               </button>

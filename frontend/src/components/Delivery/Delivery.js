@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
-import backgroundImage from '../../assets/images/background2.jpg';
+// import backgroundImage from '../../assets/images/background2.jpg';
 import axios from 'axios';
 
 // Create axios instance with base URL
@@ -85,19 +85,12 @@ function Delivery() {
   };
 
   return (
-    <div
-      className="flex"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="flex" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
+
       <Navbar />
 
       <div className="flex-1 p-4">
-        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+        {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">DELIVERY</h1>
             <button
@@ -141,139 +134,114 @@ function Delivery() {
               <p className="text-sm text-gray-500">No Record found.</p> 
             )}
           </div>
-        </div>
+        {/* </div> */}
       </div>
 
       {showAddDeliveryForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h3 className="text-lg font-medium mb-4">Add New Delivery</h3>
             <form onSubmit={handleAddDelivery}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Delivery Date
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.delivery_date}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, delivery_date: e.target.value })
-                    }
-                    required
-                  />
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Date</label>
+                        <input
+                            type="date"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.delivery_date}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, delivery_date: e.target.value })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Time</label>
+                        <input
+                            type="time"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.delivery_time}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, delivery_time: e.target.value })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                        <input
+                            type="text"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.supplier}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, supplier: e.target.value })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                        <select
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.product_id}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, product_id: e.target.value })}
+                            required
+                        >
+                            <option value="">Select Product</option>
+                            {products.map((product) => (
+                                <option key={product.product_id} value={product.product_id}>
+                                    {product.product_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                        <input
+                            type="number"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.quantity}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, quantity: parseInt(e.target.value, 10) || 0 })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Price (per unit)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.price}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, price: parseFloat(e.target.value) || 0 })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                        <input
+                            type="text"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={newDelivery.contact_number}
+                            onChange={(e) => setNewDelivery({ ...newDelivery, contact_number: e.target.value })}
+                            required
+                        />
+                    </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Delivery Time
-                  </label>
-                  <input
-                    type="time"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.delivery_time}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, delivery_time: e.target.value })
-                    }
-                    required
-                  />
+    
+                <div className="mt-6 flex justify-end space-x-3">
+                    <button
+                        type="button"
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                        onClick={() => setShowAddDeliveryForm(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded hover:bg-blue-800"
+                        disabled={loading}
+                    >
+                        {loading ? 'Scheduling...' : 'Add Delivery'}
+                    </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Supplier
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.supplier}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, supplier: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Product
-                  </label>
-                  <select 
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.product_id}
-                    onChange={(e) => setNewDelivery({ ...newDelivery, product_id: e.target.value })}
-                    required
-                  >
-                    <option value="">Select Product</option>
-                    {products.map((product) => (
-                      <option key={product.product_id} value={product.product_id}> 
-                        {product.product_name} 
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Quantity
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.quantity}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, quantity: parseInt(e.target.value, 10) || 0 }) 
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price (per unit)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01" 
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.price}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, price: parseFloat(e.target.value) || 0 }) 
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Contact Number
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    value={newDelivery.contact_number}
-                    onChange={(e) =>
-                      setNewDelivery({ ...newDelivery, contact_number: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  type="button"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-                  onClick={() => setShowAddDeliveryForm(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded hover:bg-blue-800"
-                  disabled={loading} 
-                >
-                  {loading ? 'Scheduling...' : 'Add Delivery'} 
-                </button>
-              </div>
             </form>
-          </div>
         </div>
+    </div>
+    
       )}
     </div>
   );

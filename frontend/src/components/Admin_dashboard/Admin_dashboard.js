@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import Trend from '../trend/Trend';
-import backgroundImage from '../../assets/images/background2.jpg';
+// import backgroundImage from '../../assets/images/background2.jpg';
 
 function Admin_dashboard() {
   const [salesData, setSalesData] = useState([]);
@@ -90,19 +90,11 @@ function Admin_dashboard() {
     new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <div
-      className="flex"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="flex" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
       <Navbar />
 
       <div className="flex-1 p-4">
-        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+        {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">ADMIN DASHBOARD</h1>
           </div>
@@ -123,7 +115,7 @@ function Admin_dashboard() {
               onChange={(e) => setEndDate(e.target.value)}
             />
             <button
-              className="px-4 py-2 bg-[#0442b1] text-white rounded hover:bg-[#033387] transition-colors"
+              className="px-4 py-2 bg-[#1565C0] text-white rounded hover:bg-[#0D47A1] transition-colors"
               onClick={() => {
                 setStartDate('');
                 setEndDate('');
@@ -159,7 +151,7 @@ function Admin_dashboard() {
                         <td className="px-4 py-3 text-center">P{parseFloat(sale.total_amount).toFixed(2)}</td>
                         <td className="px-4 py-3 text-center">
                           <button
-                            className="px-4 py-2 bg-[#0442b1] hover:bg-[#033387] text-white rounded"
+                            className="px-4 py-2 bg-[#1565C0] hover:bg-[#0D47A1] text-white rounded"
                             onClick={() => fetchTransactionDetails(sale.transaction_id)}
                           >
                             View Details
@@ -179,7 +171,7 @@ function Admin_dashboard() {
               </h3>
             </div>
           )}
-        </div>
+        {/* </div> */}
       </div>
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { BellIcon } from '@heroicons/react/24/outline';
 import Navbar from '../Navbar/Navbar';
-import backgroundImage from '../../assets/images/background2.jpg';
+// import backgroundImage from '../../assets/images/background2.jpg';
 import axios from 'axios';
 
 // Create axios instance with base URL
@@ -208,18 +208,13 @@ const fetchProducts = async (categoryIds) => {
   
 
   return (
-    <div
-      className="flex"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="flex" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
+
       <Navbar />
+
       <div className="flex-1 p-4">
-        <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6">
+        {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
+
           {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">INVENTORY</h1>
@@ -614,7 +609,7 @@ const fetchProducts = async (categoryIds) => {
               </div>
             </div>
           )}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );
