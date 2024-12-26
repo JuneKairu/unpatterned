@@ -516,7 +516,7 @@ const fetchProducts = async (categoryIds) => {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-green-600rounded hover:bg-green-700"
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-green-600"
                       disabled={loading}
                     >
                       {loading ? 'Adding...' : 'Add Category'}
