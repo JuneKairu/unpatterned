@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { BellIcon, InboxIcon, UserCircleIcon ,ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 // import backgroundImage from '../assets/images/background2.jpg';
 import InventoryModal from '../components/modals/InventoryModal';
 import NotificationModal from '../components/modals/NotificationModal';
@@ -201,6 +201,16 @@ const handleConfirmPurchase = async () => {
   isOpen={isNotificationModalOpen} 
   onClose={() => setIsNotificationModalOpen(false)} 
 />
+
+<button 
+  // onClick={handleInventoryClick} 
+  className="flex items-center space-x-2 p-2 bg-green-700 text-white rounded-md hover:bg-green-800" 
+  title="Profile"
+>
+  <UserCircleIcon className="h-6 w-6" />
+  <span>Profile</span>
+</button>
+
               <button 
   onClick={handleInventoryClick} 
   className="flex items-center space-x-2 p-2 bg-[#1565C0] text-white rounded-md hover:bg-[#0D47A1]" 
