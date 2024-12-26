@@ -13,6 +13,8 @@ const api = axios.create({
 function Inventory() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [showManageCategoriesModal, setShowManageCategoriesModal] = useState(false);
+
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
@@ -48,39 +50,46 @@ function Inventory() {
       setProducts([]);
     }
   }, [selectedCategories]);
+// Modified fetchCategories to include "All Categories"
+const fetchCategories = async () => {
+  setLoading(true);
+  try {
+    const res = await api.get('http://localhost:8081/api/categories');
+    const allCategoriesOption = [{ category_id: 0, category_name: "All Categories" }];
+    setCategories([...allCategoriesOption, ...res.data]);
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    setError("Failed to load categories");
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('http://localhost:8081/api/categories');
-      setCategories(res.data);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-      setError("Failed to load categories");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchProducts = async (categoryIds) => {
-    setLoading(true);
-    try {
+// Modified fetchProducts to handle "All Categories"
+const fetchProducts = async (categoryIds) => {
+  setLoading(true);
+  try {
+    let allProducts = [];
+    if (categoryIds.includes(0)) {
+      const res = await api.get('http://localhost:8081/api/products');
+      allProducts = res.data;
+    } else {
       const promises = categoryIds.map((id) =>
         api.get(`http://localhost:8081/api/products/${id}`)
       );
       const responses = await Promise.all(promises);
-      const allProducts = responses.flatMap((res) => res.data);
-      setProducts(allProducts);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products");
-    } finally {
-      setLoading(false);
+      allProducts = responses.flatMap((res) => res.data);
     }
-  };
-
+    setProducts(allProducts);
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    setError("Failed to load products");
+  } finally {
+    setLoading(false);
+  }
+};
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -166,6 +175,37 @@ function Inventory() {
       alert("Failed to update product");
     }
   };
+  const handleEditCategory = (category) => {
+    const newCategoryName = prompt("Enter new name for the category:", category.category_name);
+    if (newCategoryName && newCategoryName !== category.category_name) {
+      updateCategory(category.category_id, newCategoryName);
+    }
+  };
+  
+  const updateCategory = async (categoryId, newCategoryName) => {
+    try {
+      await api.put(`/api/categories/${categoryId}`, { category_name: newCategoryName });
+      alert("Category updated successfully");
+      fetchCategories();
+    } catch (err) {
+      console.error("Error updating category:", err);
+      alert("Failed to update category");
+    }
+  };
+  
+  const handleDeleteCategory = async (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        await api.delete(`/api/categories/${categoryId}`);
+        alert("Category deleted successfully");
+        fetchCategories();
+      } catch (err) {
+        console.error("Error deleting category:", err);
+        alert("Failed to delete category");
+      }
+    }
+  };
+  
 
   return (
     <div
@@ -210,24 +250,84 @@ function Inventory() {
             >
               Add New Category
             </button>
+            <button
+  className="bg-purple-600 text-white py-1.5 px-3 rounded hover:bg-purple-700 transition-colors text-sm"
+  onClick={() => setShowManageCategoriesModal(true)}
+  disabled={loading}
+>
+  Manage Product Categories
+</button>
+
           </div>
+          {showManageCategoriesModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <h3 className="text-lg font-medium mb-4">Manage Categories</h3>
+      {categories.length === 0 ? (
+        <p className="text-gray-500">No categories available.</p>
+      ) : (
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories.map((category) => (
+              <tr key={category.category_id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{category.category_name}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <button
+                    onClick={() => handleEditCategory(category)}
+                    className="text-indigo-600 hover:text-indigo-900 mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCategory(category.category_id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <div className="mt-4 flex justify-end">
+        <button
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+          onClick={() => setShowManageCategoriesModal(false)}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
           {/* Category Filter */}
           <div className="mb-6">
             <h2 className="text-base font-medium text-gray-700 mb-2">Filter by Category</h2>
             <div className="w-full md:w-1/2">
-              <Select
-                isMulti
-                isLoading={loading}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select categories..."
-                onChange={(selected) => setSelectedCategories(selected || [])}
-                options={categories.map(category => ({
-                  value: category.category_id,
-                  label: category.category_name
-                }))}
-              />
+            <Select
+  isMulti
+  isLoading={loading}
+  className="basic-multi-select"
+  classNamePrefix="select"
+  placeholder="Select categories..."
+  onChange={(selected) => setSelectedCategories(selected || [])}
+  options={categories.map(category => ({
+    value: category.category_id,
+    label: category.category_name
+  }))}
+/>
             </div>
           </div>
 
@@ -431,6 +531,7 @@ function Inventory() {
               </div>
             </div>
           )}
+          
 
           {/* Update Product Modal */}
           {showUpdateModal && (

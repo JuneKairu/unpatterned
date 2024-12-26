@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BellIcon, InboxIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import backgroundImage from '../assets/images/background2.jpg';
-
+import InventoryModal from '../components/modals/InventoryModal';
+import NotificationModal from '../components/modals/NotificationModal';
 
 const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
 
@@ -14,9 +15,13 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cashGiven, setCashGiven] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const handleInventoryClick = () => {
+    setIsInventoryModalOpen(true);
+  };
   // Fetch categories on component mount
   useEffect(() => {
     fetch('http://localhost:8081/api/categories')
@@ -191,14 +196,32 @@ const handleConfirmPurchase = async () => {
             <h1 className="text-2xl font-bold text-gray-800">LCCB BOOKSTORE</h1>
 
             <div className="flex space-x-4">
-              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Notifications">
-                <BellIcon className="h-6 w-6" />
-                <span>Notifications</span>
-              </button>
-              <button className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" title="Inventory">
-                <InboxIcon className="h-6 w-6" />
-                <span>Inventory</span>
-              </button>
+            <button 
+  onClick={() => setIsNotificationModalOpen(true)} 
+  className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" 
+  title="Notifications"
+>
+  <BellIcon className="h-6 w-6" />
+  <span>Notifications</span>
+</button>
+
+<NotificationModal 
+  isOpen={isNotificationModalOpen} 
+  onClose={() => setIsNotificationModalOpen(false)} 
+/>
+              <button 
+  onClick={handleInventoryClick} 
+  className="flex items-center space-x-2 p-2 bg-[#0442b1] text-white rounded-md hover:bg-[#033387]" 
+  title="Inventory"
+>
+  <InboxIcon className="h-6 w-6" />
+  <span>Inventory</span>
+</button>
+
+<InventoryModal 
+  isOpen={isInventoryModalOpen} 
+  onClose={() => setIsInventoryModalOpen(false)} 
+/>
               <button onClick={handleLogout} className="flex items-center space-x-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-700" title="Logout">
                 <ArrowLeftOnRectangleIcon className="h-6 w-6" />
                 <span>Logout</span>

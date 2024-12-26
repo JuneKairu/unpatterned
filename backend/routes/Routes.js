@@ -37,7 +37,16 @@ router.get('/top-selling-products', controller.getTopSellingProducts);
 // Delivery routes
 router.post('/deliveries', controller.addDelivery);
 router.get('/deliveries', controller.getAllDeliveries);
-
+//added 12/26/24
+// inventory dashboard
+router.get('/inventory', controller.getInventory);
+router.post('/stock-request', controller.createStockRequest);
+// notif dash 
+router.get('/low-stock', controller.getLowStockProducts);
+//new fetch product admin invent
+router.get('/products', controller.getAllProducts);
+router.put('/categories/:category_id', controller.updateCategory); // Update category by ID
+router.delete('/categories/:category_id', controller.deleteCategory); // Delete category by ID
 
 module.exports = router;
 //test 12323132131321

@@ -181,6 +181,21 @@ exports.GetCategories = (req, res) => {
     });
 };
 
+exports.getAllProducts = (req, res) => {
+    const sql = `
+      SELECT p.*, c.category_name 
+      FROM tbl_products p 
+      JOIN tbl_productcategory c ON p.category_id = c.category_id
+    `;
+    db.query(sql, (err, data) => {
+      if (err) {
+        console.error("Error fetching all products:", err);
+        return res.status(500).json({ message: "Error fetching all products", error: err });
+      }
+      return res.json(data);
+    });
+  };
+
 exports.ViewProducts = (req, res) => {
     const { category_id } = req.params;
     const sql = `
@@ -540,3 +555,96 @@ exports.getAllDeliveries = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch deliveries', error });
     }
 };
+// 12/26/24 added 
+
+// And add these controller functions:
+exports.getInventory = async (req, res) => {
+    try {
+      const query = 'SELECT * FROM tbl_products';
+      db.query(query, (err, results) => {
+        if (err) {
+          console.error('Error fetching inventory:', err);
+          return res.status(500).json({ message: 'Failed to fetch inventory', error: err });
+        }
+        res.json(results);
+      });
+    } catch (error) {
+      console.error('Error in getInventory:', error);
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  };
+  
+  exports.createStockRequest = async (req, res) => {
+    const { product_id, quantity, status } = req.body;
+    
+    try {
+      const query = `
+        INSERT INTO tbl_stock_requests (product_id, quantity, status, request_date)
+        VALUES (?, ?, ?, NOW())
+      `;
+      
+      db.query(query, [product_id, quantity, status], (err, result) => {
+        if (err) {
+          console.error('Error creating stock request:', err);
+          return res.status(500).json({ message: 'Failed to create stock request', error: err });
+        }
+        res.status(201).json({ message: 'Stock request created successfully', id: result.insertId });
+      });
+    } catch (error) {
+      console.error('Error in createStockRequest:', error);
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  };
+
+  exports.getLowStockProducts = (req, res) => {
+    const query = 'SELECT * FROM tbl_products WHERE quantity < 20';
+    
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Error fetching low stock products:', err);
+        return res.status(500).json({ message: 'Failed to fetch low stock products' });
+      }
+      res.json(results);
+    });
+  };
+
+  exports.updateCategory = (req, res) => {
+    const { category_id } = req.params;
+    const { category_name } = req.body;
+    const sql = "UPDATE tbl_productcategory SET category_name = ? WHERE category_id = ?";
+    
+    db.query(sql, [category_name, category_id], (err, result) => {
+      if (err) {
+        console.error("Error updating category:", err);
+        return res.status(500).json({ message: "Error updating category", error: err });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      return res.status(200).json({ message: "Category updated successfully" });
+    });
+  };
+  
+  exports.deleteCategory = (req, res) => {
+    const { category_id } = req.params;
+  
+    // Delete related products first
+    const deleteProductsSql = "DELETE FROM tbl_products WHERE category_id = ?";
+    db.query(deleteProductsSql, [category_id], (deleteProductsErr) => {
+      if (deleteProductsErr) {
+        console.error("Error deleting related products:", deleteProductsErr);
+        return res.status(500).json({ message: "Error deleting related products" });
+      }
+  
+      // Delete the category
+      const deleteCategorySql = "DELETE FROM tbl_productcategory WHERE category_id = ?";
+      db.query(deleteCategorySql, [category_id], (deleteCategoryErr) => {
+        if (deleteCategoryErr) {
+          console.error("Error deleting category:", deleteCategoryErr);
+          return res.status(500).json({ message: "Error deleting category" });
+        }
+        return res.status(200).json({ message: "Category deleted successfully" });
+      });
+    });
+  };
+  
