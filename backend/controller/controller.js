@@ -546,15 +546,22 @@ exports.getAllDeliveries = async (req, res) => {
         const query = `
             SELECT d.*, p.product_name 
             FROM tbl_deliveries d 
-            JOIN tbl_products p ON d.product_id = p.product_id
+            LEFT JOIN tbl_products p ON d.product_id = p.product_id
         `;
-        const [rows] = await db.query(query);
-        res.status(200).json(rows);
+        
+        db.query(query, (error, results) => {
+            if (error) {
+                console.error('Query error:', error);
+                return res.status(500).json({ message: 'Database error', error: error.message });
+            }
+            res.status(200).json(results || []);
+        });
     } catch (error) {
-        console.error('Error fetching deliveries:', error);
-        res.status(500).json({ message: 'Failed to fetch deliveries', error });
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Failed to fetch deliveries' });
     }
 };
+
 // 12/26/24 added 
 
 // And add these controller functions:
@@ -636,7 +643,7 @@ exports.getInventory = async (req, res) => {
         return res.status(500).json({ message: "Error deleting related products" });
       }
   
-      // Delete the category
+      // Delete the categorye
       const deleteCategorySql = "DELETE FROM tbl_productcategory WHERE category_id = ?";
       db.query(deleteCategorySql, [category_id], (deleteCategoryErr) => {
         if (deleteCategoryErr) {
