@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 
 const NotificationModal = ({ isOpen, onClose }) => {
   const [lowStockProducts, setLowStockProducts] = useState([]);
@@ -62,13 +63,12 @@ const NotificationModal = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-6 w-3/4 max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Low Stock Notifications</h2>
-          <button 
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
-          >
-            ×
+          <h2 className="text-2xl font-bold text-[#0D47A1]">Low Stock Notifications</h2>
+
+          <button onClick={onClose} className="text-red-600 hover:text-red-700 text-xl flex items-center" >
+            <XCircleIcon className="h-10 w-10" /> 
           </button>
+
         </div>
 
         {lowStockProducts.length === 0 ? (
@@ -76,20 +76,20 @@ const NotificationModal = ({ isOpen, onClose }) => {
         ) : (
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="p-2 text-left border">Product Name</th>
-                <th className="p-2 text-left border">Current Stock</th>
-                <th className="p-2 text-left border">Status</th>
-                <th className="p-2 text-left border">Actions</th>
+              <tr className="bg-[#1E88E5]">
+                <th className="p-2 text-left font-bold border">Product Name</th>
+                <th className="p-2 text-left font-bold border">Current Stock</th>
+                <th className="p-2 text-left font-bold border">Status</th>
+                <th className="p-2 text-left font-bold border">Actions</th>
               </tr>
             </thead>
             <tbody>
               {lowStockProducts.map((product) => (
                 <tr key={product.product_id} className="border-b">
-                  <td className="p-2 border">{product.product_name}</td>
-                  <td className="p-2 border">{product.quantity}</td>
+                  <td className="p-2 border font-medium">{product.product_name}</td>
+                  <td className="p-2 border font-medium">{product.quantity}</td>
                   <td className="p-2 border">
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">
+                    <span className="px-2 py-1 bg-red-600 text-white rounded-md text-sm">
                       Low Stock
                     </span>
                   </td>

@@ -116,7 +116,7 @@ function AccountManagement() {
             <div className="flex-1 p-4">
                 {/* <div className="flex flex-col h-full bg-white/80 rounded-lg shadow-md p-6"> */}
                     <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-bold text-gray-800">ACCOUNT MANAGEMENT</h1>
+                        <h1 className="text-2xl font-bold text-[#0D47A1]">ACCOUNT MANAGEMENT</h1>
                         <button
                             className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors"
                             title="Notifications"
@@ -216,48 +216,49 @@ function AccountManagement() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
 
-                    <table className="table-auto w-full border-collapse border border-black">
-                        <thead>
-                            <tr className="bg-white">
-                                <th className="border border-black px-4 py-2">ID</th>
-                                <th className="border border-black px-4 py-2">Email</th>
-                                <th className="border border-black px-4 py-2">Actions</th>
-                                <th className="border border-black px-4 py-2">Total Sales</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredAccounts.map((account) => (
-                                <tr key={account.id} className="hover:bg-gray-100">
-                                    <td className="border border-black px-4 py-2">{account.id}</td>
-                                    <td className="border border-black px-4 py-2">{account.email}</td>
-                                    <td className="border border-black px-4 py-2 flex gap-2">
-                                        <button
-                                            onClick={() => {
-                                                setSelectedAccount(account);
-                                                setShowUpdateAccountForm(true);
-                                            }}
-                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
-                                        >
-                                            Update
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteAccount(account.id)}
-                                            className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                    <td className="border border-black px-4 py-2">
-                                    <button
-                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
-                                        >
-                                            View Sales
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+<table className="table-auto w-full border-collapse border shadow-sm">
+    <thead>
+        <tr className="bg-[#1976D2]">
+            <th className="border px-4 py-2 text-left font-bold">ID</th>
+            <th className="border px-4 py-2 text-left font-bold">Email</th>
+            <th className="border px-4 py-2 text-left font-bold">Actions</th>
+            <th className="border px-4 py-2 text-left font-bold">Total Sales</th>
+        </tr>
+    </thead>
+    <tbody>
+        {filteredAccounts.map((account) => (
+            <tr key={account.id} className="hover:bg-gray-100">
+                <td className="border border-black px-4 py-2">{account.id}</td>
+                <td className="border border-black px-4 py-2">{account.email}</td>
+                <td className="border border-black px-4 py-2">
+                    <button
+                        onClick={() => {
+                            setSelectedAccount(account);
+                            setShowUpdateAccountForm(true);
+                        }}
+                        className="bg-blue-500 text-white ml-6 py-1 px-2 rounded hover:bg-blue-600 transition ease-in-out duration-150"
+                    >
+                        Update
+                    </button>
+                    <button
+                        onClick={() => handleDeleteAccount(account.id)}
+                        className="bg-red-500 text-white ml-4 py-1 px-2 rounded hover:bg-red-600 transition ease-in-out duration-150"
+                    >
+                        Delete
+                    </button>
+                </td>
+                <td className="border border-black px-4 py-2">
+                    <button
+                        className="bg-blue-500 text-white ml-6 py-1 px-2 rounded hover:bg-blue-600 transition ease-in-out duration-150"
+                    >
+                        View Sales
+                    </button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
                 {/* </div> */}
             </div>
             
