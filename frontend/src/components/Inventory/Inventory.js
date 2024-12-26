@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { BellIcon } from '@heroicons/react/24/outline';
 import Navbar from '../Navbar/Navbar';
+import StockRequests from '../modals/Stockrequests';
 // import backgroundImage from '../../assets/images/background2.jpg';
 import axios from 'axios';
 
@@ -14,7 +15,7 @@ function Inventory() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [showManageCategoriesModal, setShowManageCategoriesModal] = useState(false);
-
+  const [isStockRequestsModalOpen, setIsStockRequestsModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
@@ -219,13 +220,22 @@ const fetchProducts = async (categoryIds) => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">INVENTORY</h1>
             <div className="flex space-x-4">
-              <button
-                className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors"
-                title="Notifications"
-              >
-                <BellIcon className="h-5 w-5" />
-                <span className="text-sm">Notifications</span>
-              </button>
+            <div className="flex space-x-4">
+  <button
+    className="flex items-center space-x-2 p-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors"
+    title="Stock Requests"
+    onClick={() => setIsStockRequestsModalOpen(true)}
+  >
+    <BellIcon className="h-5 w-5" />
+    <span className="text-sm">Stock Requests</span>
+  </button>
+</div>
+
+
+<StockRequests 
+  isOpen={isStockRequestsModalOpen} 
+  onClose={() => setIsStockRequestsModalOpen(false)} 
+/>
             </div>
           </div>
 

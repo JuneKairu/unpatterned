@@ -48,5 +48,8 @@ router.get('/products', controller.getAllProducts);
 router.put('/categories/:category_id', controller.updateCategory); // Update category by ID
 router.delete('/categories/:category_id', controller.deleteCategory); // Delete category by ID
 
+
+router.get('/stock-requests', controller.getStockRequests);
+router.put('/stock-requests/:request_id', controller.updateStockRequest);
 module.exports = router;
 //test 12323132131321

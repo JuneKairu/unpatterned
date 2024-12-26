@@ -654,4 +654,58 @@ exports.getInventory = async (req, res) => {
       });
     });
   };
+  //added 12/27/24
+  exports.getStockRequests = (req, res) => {
+  const sql = `
+    SELECT sr.request_id, 
+           p.product_name, 
+           sr.quantity, 
+           sr.status, 
+           sr.request_date,
+           p.product_id
+    FROM tbl_stock_requests sr
+    JOIN tbl_products p ON sr.product_id = p.product_id
+    ORDER BY sr.request_date DESC`;
+
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error('Error fetching stock requests:', err);
+      res.status(500).json({ message: 'Error fetching stock requests' });
+    } else {
+      res.json(data);
+    }
+  });
+};
+
+exports.updateStockRequest = (req, res) => {
+  const { request_id } = req.params;
+  const { status } = req.body;
+  
+  const sql = 'UPDATE tbl_stock_requests SET status = ? WHERE request_id = ?';
+  
+  db.query(sql, [status, request_id], (err, result) => {
+    if (err) {
+      console.error('Error updating stock request:', err);
+      res.status(500).json({ message: 'Error updating stock request' });
+    } else {
+      res.json({ message: 'Stock request updated successfully' });
+    }
+  });
+};
+
+// Example route to create a new stock request
+exports.createStockRequest = (req, res) => {
+  const { product_id, quantity } = req.body;
+  
+  const sql = 'INSERT INTO tbl_stock_requests (product_id, quantity, status) VALUES (?, ?, "pending")';
+  
+  db.query(sql, [product_id, quantity], (err, result) => {
+    if (err) {
+      console.error('Error creating stock request:', err);
+      res.status(500).json({ message: 'Error creating stock request' });
+    } else {
+      res.json({ message: 'Stock request created successfully', id: result.insertId });
+    }
+  });
+};
   
