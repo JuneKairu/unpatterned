@@ -174,37 +174,41 @@ function Admin_dashboard() {
         {/* </div> */}
       </div>
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Transaction Details</h2>
-            {transactionDetails.length > 0 ? (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2">Product Name</th>
-                    <th className="px-4 py-2">Quantity</th>
-                    <th className="px-4 py-2">Price</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {transactionDetails.map((detail, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">{detail.product_name}</td>
-                      <td className="px-4 py-2">{detail.quantity}</td>
-                      <td className="px-4 py-2">P{parseFloat(detail.price).toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>No details found</p>
-            )}
-            <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded" onClick={closeModal}>
-              Close
-            </button>
-          </div>
-        </div>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-6 rounded shadow-lg">
+      <h2 className="text-lg font-bold mb-4">Transaction Details</h2>
+      {transactionDetails.length > 0 ? (
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2">Product Name</th>
+              <th className="px-4 py-2">Quantity</th>
+              <th className="px-4 py-2">Price</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {transactionDetails.map((detail, index) => (
+              <tr key={index}>
+                <td className="px-4 py-2">{detail.product_name}</td>
+                <td className="px-4 py-2">{detail.quantity}</td>
+                <td className="px-4 py-2">
+                  P{typeof detail.price === 'number' && !isNaN(detail.price) 
+                      ? detail.price.toFixed(2) 
+                      : '0.00'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No details found</p>
       )}
+      <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded" onClick={closeModal}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 }

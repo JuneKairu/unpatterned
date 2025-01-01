@@ -37,6 +37,8 @@ router.get('/top-selling-products', controller.getTopSellingProducts);
 // Delivery routes
 router.post('/deliveries', controller.addDelivery);
 router.get('/deliveries', controller.getAllDeliveries);
+
+
 //added 12/26/24
 // inventory dashboard
 router.get('/inventory', controller.getInventory);

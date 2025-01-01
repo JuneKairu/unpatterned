@@ -327,44 +327,61 @@ exports.CreateTransaction = (req, res) => {
 
         // Process each product
         products.forEach(product => {
-            // Update product quantity
-            const updateProductSql = "UPDATE tbl_products SET quantity = quantity - ? WHERE product_id = ?";
+            // First get the current price of the product
+            const getPriceSql = "SELECT price FROM tbl_products WHERE product_id = ?";
             
-            db.query(updateProductSql, [product.quantity, product.product_id], (updateErr, updateResult) => {
-                if (updateErr) {
+            db.query(getPriceSql, [product.product_id], (priceErr, priceResult) => {
+                if (priceErr) {
                     hasError = true;
-                    console.error("Error updating product quantity:", updateErr);
+                    console.error("Error getting product price:", priceErr);
                     return res.status(500).json({
                         success: false,
-                        message: "Error updating product quantity",
-                        error: updateErr.message
+                        message: "Error getting product price",
+                        error: priceErr.message
                     });
                 }
 
-                // Insert transaction detail
-                const detailSql = "INSERT INTO tbl_transaction_details (transaction_id, product_id, quantity) VALUES (?, ?, ?)";
+                const currentPrice = priceResult[0].price;
+
+                // Update product quantity
+                const updateProductSql = "UPDATE tbl_products SET quantity = quantity - ? WHERE product_id = ?";
                 
-                db.query(detailSql, [transaction_id, product.product_id, product.quantity], (detailErr, detailResult) => {
-                    if (detailErr) {
+                db.query(updateProductSql, [product.quantity, product.product_id], (updateErr, updateResult) => {
+                    if (updateErr) {
                         hasError = true;
-                        console.error("Error inserting transaction detail:", detailErr);
+                        console.error("Error updating product quantity:", updateErr);
                         return res.status(500).json({
                             success: false,
-                            message: "Error inserting transaction detail",
-                            error: detailErr.message
+                            message: "Error updating product quantity",
+                            error: updateErr.message
                         });
                     }
 
-                    completedUpdates++;
+                    // Insert transaction detail with the current price
+                    const detailSql = "INSERT INTO tbl_transaction_details (transaction_id, product_id, quantity, price_at_time) VALUES (?, ?, ?, ?)";
+                    
+                    db.query(detailSql, [transaction_id, product.product_id, product.quantity, currentPrice], (detailErr, detailResult) => {
+                        if (detailErr) {
+                            hasError = true;
+                            console.error("Error inserting transaction detail:", detailErr);
+                            return res.status(500).json({
+                                success: false,
+                                message: "Error inserting transaction detail",
+                                error: detailErr.message
+                            });
+                        }
 
-                    // If all updates are completed and no errors occurred, send success response
-                    if (completedUpdates === products.length && !hasError) {
-                        res.status(200).json({
-                            success: true,
-                            message: "Transaction completed successfully",
-                            transaction_id
-                        });
-                    }
+                        completedUpdates++;
+
+                        // If all updates are completed and no errors occurred, send success response
+                        if (completedUpdates === products.length && !hasError) {
+                            res.status(200).json({
+                                success: true,
+                                message: "Transaction completed successfully",
+                                transaction_id
+                            });
+                        }
+                    });
                 });
             });
         });
@@ -381,8 +398,8 @@ exports.GetTransaction = (req, res) => {
             t.total_amount,
             td.product_id,
             td.quantity,
-            p.product_name,
-            p.price
+            td.price_at_time as price,
+            p.product_name
         FROM tbl_transactions t
         JOIN tbl_transaction_details td ON t.transaction_id = td.transaction_id
         JOIN tbl_products p ON td.product_id = p.product_id
@@ -398,6 +415,9 @@ exports.GetTransaction = (req, res) => {
                 error: err.message 
             });
         }
+
+        //console.log("Transaction details:", data);
+
         return res.json({
             success: true,
             data: data
@@ -405,9 +425,6 @@ exports.GetTransaction = (req, res) => {
     });
 };
 //added 11/25/24
-// Add this function to your existing controller.js
-
-// Add this function to your existing controller.js
 exports.getSalesData = (req, res) => {
     const { startDate, endDate } = req.query;
 
@@ -496,57 +513,70 @@ exports.getTopSellingProducts = (req, res) => {
     });
 };
 //added 12/7/24
-// Add a new delivery
 exports.addDelivery = async (req, res) => {
-    try {
-        const {
-            delivery_date,
-            delivery_time,
-            supplier,
-            product_id,
-            quantity,
-            price,
-            total_amount,
-            contact_number
-        } = req.body;
+  const {
+    delivery_date,
+    delivery_time,
+    supplier,
+    product_id,
+    quantity,
+    cost_price,
+    selling_price,
+    total_amount,
+    contact_number,
+  } = req.body;
 
-        const query = `
-            INSERT INTO tbl_deliveries (
-                delivery_date,
-                delivery_time,
-                supplier,
-                product_id,
-                quantity,
-                price,
-                total_amount,
-                contact_number
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        await db.query(query, [
-            delivery_date,
-            delivery_time,
-            supplier,
-            product_id,
-            quantity,
-            price,
-            total_amount,
-            contact_number
-        ]);
+  if (
+    !delivery_date ||
+    !delivery_time ||
+    !supplier ||
+    !product_id ||
+    !quantity ||
+    !cost_price ||
+    !selling_price ||
+    !total_amount ||
+    !contact_number
+  ) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
 
-        res.status(201).json({ message: 'Delivery added successfully!' });
-    } catch (error) {
-        console.error('Error adding delivery:', error);
-        res.status(500).json({ message: 'Failed to add delivery', error });
-    }
+  try {
+    const query = `
+      INSERT INTO tbl_deliveries (
+        delivery_date, delivery_time, supplier, product_id, quantity,
+        cost_price, selling_price, total_amount, contact_number
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    await db.query(query, [
+      delivery_date,
+      delivery_time,
+      supplier,
+      product_id,
+      quantity,
+      cost_price,
+      selling_price,
+      total_amount,
+      contact_number,
+    ]);
+    res.status(201).json({ message: 'Delivery added successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to add delivery', error: error.message });
+  }
 };
 
-// Get all deliveries
+
+
+// Keep your existing getAllDeliveries method
 exports.getAllDeliveries = async (req, res) => {
     try {
         const query = `
-            SELECT d.*, p.product_name 
+            SELECT 
+                d.*,
+                p.product_name,
+                p.price
             FROM tbl_deliveries d 
             LEFT JOIN tbl_products p ON d.product_id = p.product_id
+            ORDER BY d.delivery_date DESC, d.delivery_time DESC
         `;
         
         db.query(query, (error, results) => {
@@ -562,6 +592,60 @@ exports.getAllDeliveries = async (req, res) => {
     }
 };
 
+// Add new methods
+exports.getDeliveryById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = `
+            SELECT 
+                d.*,
+                p.product_name,
+                p.price
+            FROM tbl_deliveries d 
+            LEFT JOIN tbl_products p ON d.product_id = p.product_id
+            WHERE d.id = ?
+        `;
+        
+        db.query(query, [id], (error, results) => {
+            if (error) {
+                return res.status(500).json({ message: 'Database error', error: error.message });
+            }
+            if (results.length === 0) {
+                return res.status(404).json({ message: 'Delivery not found' });
+            }
+            res.status(200).json(results[0]);
+        });
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Failed to fetch delivery' });
+    }
+};
+
+
+exports.getDeliveryStats = async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                COUNT(*) as total_deliveries,
+                SUM(quantity) as total_quantity,
+                SUM(total_amount) as total_amount,
+                AVG(cost_price) as avg_cost_price,
+                AVG(selling_price) as avg_selling_price
+            FROM tbl_deliveries
+            WHERE delivery_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+        `;
+        
+        db.query(query, (error, results) => {
+            if (error) {
+                return res.status(500).json({ message: 'Database error', error: error.message });
+            }
+            res.status(200).json(results[0] || {});
+        });
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Failed to fetch delivery statistics' });
+    }
+};
 // 12/26/24 added 
 
 // And add these controller functions:
