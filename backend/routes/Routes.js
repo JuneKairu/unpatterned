@@ -51,5 +51,12 @@ router.delete('/categories/:category_id', controller.deleteCategory); // Delete 
 
 router.get('/stock-requests', controller.getStockRequests);
 router.put('/stock-requests/:request_id', controller.updateStockRequest);
+router.post('/password-requests', controller.createPasswordRequest);
+
+// Route for fetching all password requests
+router.get('/passwordRequests', controller.getPasswordRequests);
+
+// Route for updating the status of a password request
+router.put('/passwordRequests/:requestId', controller.updatePasswordRequestStatus);
 module.exports = router;
 //test 12323132131321

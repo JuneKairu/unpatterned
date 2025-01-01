@@ -4,6 +4,7 @@ import { BellIcon, InboxIcon, UserCircleIcon, ArrowLeftOnRectangleIcon } from '@
 import html2canvas from 'html2canvas';
 import InventoryModal from '../components/modals/InventoryModal';
 import NotificationModal from '../components/modals/NotificationModal';
+import ProfileModal from '../components/modals/ProfileModal';
 
 const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
 
@@ -17,6 +18,7 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
   const receiptRef = useRef(null);
 
@@ -260,13 +262,19 @@ function Home() {
   onClose={() => setIsInventoryModalOpen(false)} 
 />
 
-            <button 
-              className="flex items-center space-x-2 p-2 bg-green-700 text-white rounded-md hover:bg-green-800" 
-              title="Profile"
-            >
-              <UserCircleIcon className="h-6 w-6" />
-              <span>Profile</span>
-            </button>
+<button 
+  onClick={() => setIsProfileModalOpen(true)}
+  className="flex items-center space-x-2 p-2 bg-green-700 text-white rounded-md hover:bg-green-800" 
+  title="Profile"
+>
+  <UserCircleIcon className="h-6 w-6" />
+  <span>Profile</span>
+</button>
+
+<ProfileModal 
+  isOpen={isProfileModalOpen}
+  onClose={() => setIsProfileModalOpen(false)}
+/>
 
             <button 
               onClick={handleInventoryClick} 

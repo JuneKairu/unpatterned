@@ -710,4 +710,57 @@ exports.createStockRequest = (req, res) => {
     });
   };
   
-  
+  exports.createPasswordRequest = (req, res) => {
+    const { email } = req.body;
+    
+    const sql = 'INSERT INTO tbl_request_password (email, request_date, status) VALUES (?, NOW(), "pending")';
+    
+    db.query(sql, [email], (err, result) => {
+      if (err) {
+        console.error('Error creating password reset request:', err);
+        res.status(500).json({ message: 'Error creating password reset request' });
+      } else {
+        res.json({ 
+          message: 'Password reset request created successfully', 
+          id: result.insertId 
+        });
+      }
+    });
+  };
+
+  // Fetch all password requests
+exports.getPasswordRequests = (req, res) => {
+    const sql = "SELECT request_id, email, request_date, status, created_at FROM tbl_request_password";
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.error("Error fetching password requests:", err);
+            return res.status(500).json({ message: "Error fetching password requests" });
+        }
+        return res.json(data);
+    });
+};
+
+// Update the status of a password request
+exports.updatePasswordRequestStatus = (req, res) => {
+    const requestId = req.params.requestId; // Unique identifier for the request
+    const { status } = req.body; // Updated status from the request body
+
+    if (!status) {
+        return res.status(400).json({ message: "Status is required." });
+    }
+
+    const sql = "UPDATE tbl_request_password SET status = ? WHERE request_id = ?";
+
+    db.query(sql, [status, requestId], (err, result) => {
+        if (err) {
+            console.error("Error updating password request status:", err);
+            return res.status(500).json({ message: "Error updating password request status." });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Password request not found." });
+        }
+
+        return res.status(200).json({ message: "Password request status updated successfully!" });
+    });
+};

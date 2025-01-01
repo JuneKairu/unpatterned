@@ -16,6 +16,7 @@ function AccountManagement() {
     const [accounts, setAccounts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedAccount, setSelectedAccount] = useState(null);
+    
 
     useEffect(() => {
         fetchAccounts();
