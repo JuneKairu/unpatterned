@@ -304,7 +304,6 @@ exports.DeleteProduct = (req, res) => {
         });
     });
 }
-//try new
 exports.CreateTransaction = (req, res) => {
     const { transaction_id, created_at, products, total_amount } = req.body;
 
