@@ -1,1 +1,6 @@
+database name should be "devtest;
 command use in backend and frontend are "npm start"
+
+note: default login for admin 
+username:admin@gmail.com
+password:123
